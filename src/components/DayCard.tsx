@@ -52,7 +52,7 @@ export default function DayCard({ day, title, concept, index }: DayCardProps) {
 
   return (
     <Link
-      href={`/day/${day}`}
+      href={`/course/30-days-of-ai/day/${day}`}
       className={`animate-fade-in ${staggerClass} group relative flex flex-col rounded-2xl border bg-[var(--color-card)] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
         completed
           ? "border-[var(--color-success)]/30 bg-[var(--color-success-light)]/30"

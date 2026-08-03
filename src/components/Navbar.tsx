@@ -29,7 +29,7 @@ export default function Navbar() {
           </div>
           <div>
             <h1 className="font-[family-name:var(--font-serif)] text-lg font-bold tracking-tight text-[var(--color-accent)]">
-              30-Day AI Challenge
+              AI Academy
             </h1>
             <p className="text-xs text-[var(--color-accent-light)]">
               Master AI from Scratch
@@ -47,7 +47,7 @@ export default function Navbar() {
                 : "text-[var(--color-accent-light)] hover:text-[var(--color-accent)]"
             }`}
           >
-            Course
+            Courses
           </Link>
           <Link
             href="/admin"
@@ -85,7 +85,7 @@ export default function Navbar() {
               onClick={() => setMobileMenuOpen(false)}
               className="text-sm font-medium text-[var(--color-accent-light)] transition-colors hover:text-[var(--color-accent)]"
             >
-              Course
+              Courses
             </Link>
             <Link
               href="/admin"
