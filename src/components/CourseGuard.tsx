@@ -1,6 +1,6 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 interface CourseGuardProps {
@@ -41,26 +41,14 @@ export default function CourseGuard({
     store.getServerSnapshot
   );
 
-  // We are relying on the fact that if we are on client and not unlocked, we should redirect.
-  // We can't redirect during render, so we do it in a setTimeout (which is asynchronous, bypassing the sync lint rule)
-  // or we can just render a meta refresh, but router.replace is better.
-  if (typeof window !== "undefined" && !isUnlocked) {
-    setTimeout(() => {
+  // Use an effect to handle redirection safely without breaking hydration
+  useEffect(() => {
+    if (!isUnlocked) {
       router.replace("/?unlock=30-days-of-ai");
-    }, 0);
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="flex flex-col items-center gap-3">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--color-border)] border-t-[var(--color-accent)]" />
-          <span className="text-sm text-[var(--color-accent-light)]">
-            Redirecting...
-          </span>
-        </div>
-      </div>
-    );
-  }
+    }
+  }, [isUnlocked, router]);
 
-  // If server-side rendering, or client-side unlocked
+  // If not unlocked, render a generic loading state that matches SSR perfectly
   if (!isUnlocked) {
      return (
       <div className="flex min-h-[60vh] items-center justify-center">

@@ -29,7 +29,7 @@ const contentDir = path.join(process.cwd(), "content");
 export function getAllDays(): DayMeta[] {
   if (!fs.existsSync(contentDir)) return [];
 
-  const files = fs.readdirSync(contentDir).filter((f) => f.endsWith(".md"));
+  const files = fs.readdirSync(contentDir).filter((f) => f.startsWith("day-") && f.endsWith(".md"));
 
   const days = files.map((filename) => {
     const filePath = path.join(contentDir, filename);

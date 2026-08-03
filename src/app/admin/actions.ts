@@ -30,6 +30,14 @@ export async function saveDayAction(
 
     await saveMarkdownFile(filePath, content, commitMessage);
 
+    // If running locally in development, also save to local disk so changes reflect instantly
+    if (process.env.NODE_ENV === "development") {
+      const fs = await import("fs");
+      const path = await import("path");
+      const fullPath = path.join(process.cwd(), filePath);
+      fs.writeFileSync(fullPath, content, "utf-8");
+    }
+
     return { success: true };
   } catch (error) {
     console.error("Error saving day:", error);
@@ -57,6 +65,15 @@ export async function uploadImageAction(
       .toLowerCase();
 
     const result = await uploadImage(sanitized, base64Content);
+
+    // If running locally in development, also save to local disk so images render instantly
+    if (process.env.NODE_ENV === "development" && result.path) {
+      const fs = await import("fs");
+      const path = await import("path");
+      const fullPath = path.join(process.cwd(), "public", result.path);
+      const buffer = Buffer.from(base64Content, "base64");
+      fs.writeFileSync(fullPath, buffer);
+    }
 
     return {
       success: true,

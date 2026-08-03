@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   FloppyDisk,
@@ -11,7 +11,9 @@ import {
   Spinner,
   Eye,
   PencilSimple,
+  House,
 } from "@phosphor-icons/react";
+import Link from "next/link";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import { saveDayAction, uploadImageAction, getDayRawContent } from "@/app/admin/actions";
 
@@ -34,7 +36,6 @@ export default function AdminDashboard({ days }: { days: DayInfo[] }) {
   const [uploading, setUploading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const initialLoadRef = useRef<boolean | null>(null);
 
   // Load day content
   const loadDay = useCallback(async (day: number) => {
@@ -53,16 +54,14 @@ export default function AdminDashboard({ days }: { days: DayInfo[] }) {
     setLoading(false);
   }, []);
 
-  // Load initial day content on mount (React 19 safe pattern)
-  if (initialLoadRef.current === null) {
-    initialLoadRef.current = true;
+  // Load content when selectedDay changes
+  useEffect(() => {
     loadDay(selectedDay);
-  }
+  }, [selectedDay, loadDay]);
 
-  // Select a day and load its content
+  // Select a day
   const selectDay = (day: number) => {
     setSelectedDay(day);
-    loadDay(day);
   };
 
   const hasChanges = content !== originalContent;
@@ -162,13 +161,15 @@ export default function AdminDashboard({ days }: { days: DayInfo[] }) {
           <h2 className="font-[family-name:var(--font-serif)] text-sm font-bold text-[var(--color-accent)]">
             Content Editor
           </h2>
-          <button
-            onClick={handleLogout}
-            className="rounded-lg p-1.5 text-[var(--color-accent-light)] transition-colors hover:bg-[var(--color-border-light)] hover:text-red-500"
-            title="Sign out"
-          >
-            <SignOut size={18} />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={handleLogout}
+              className="rounded-lg p-1.5 text-[var(--color-accent-light)] transition-colors hover:bg-[var(--color-border-light)] hover:text-red-500"
+              title="Sign out"
+            >
+              <SignOut size={18} />
+            </button>
+          </div>
         </div>
         <nav className="p-2">
           {days.map((day) => (
@@ -200,15 +201,25 @@ export default function AdminDashboard({ days }: { days: DayInfo[] }) {
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Toolbar */}
         <div className="flex items-center justify-between border-b border-[var(--color-border-light)] bg-white px-4 py-2.5">
-          <div className="flex items-center gap-3">
-            <h3 className="font-[family-name:var(--font-serif)] text-sm font-bold text-[var(--color-accent)]">
-              Day {selectedDay}
-            </h3>
-            {hasChanges && (
-              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
-                Unsaved changes
-              </span>
-            )}
+          <div className="flex items-center gap-4">
+            <Link
+              href={`/course/30-days-of-ai/day/${selectedDay}`}
+              className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-border-light)] bg-[var(--color-alabaster)] px-3 py-1.5 text-xs font-semibold text-[var(--color-accent-light)] shadow-sm transition-all hover:bg-white hover:text-[var(--color-accent)]"
+            >
+              <House size={14} />
+              Exit Admin
+            </Link>
+            <div className="h-4 w-px bg-[var(--color-border-light)]" />
+            <div className="flex items-center gap-3">
+              <h3 className="font-[family-name:var(--font-serif)] text-sm font-bold text-[var(--color-accent)]">
+                Day {selectedDay}
+              </h3>
+              {hasChanges && (
+                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                  Unsaved changes
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
