@@ -3,12 +3,12 @@ title: "What is Artificial Intelligence?"
 day: 1
 concept: "Defining AI and its scope"
 chapter: 1
-chapterTitle: "Foundations of AIB"
+chapterTitle: "Foundations of AI"
 ---
 
 # Day 1: What is Artificial Intelligence?
 
-## Overview
+## Overviewtbh
 
 Welcome to **Day 1** of the 30-Day AI Challenge! Today we're exploring *Defining AI and its scope*.
 
