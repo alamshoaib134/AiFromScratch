@@ -1,7 +1,7 @@
 "use client";
 
 import { Course, courseIcons } from "@/lib/courses";
-import { Clock, BookOpen, ArrowRight } from "@phosphor-icons/react";
+import { Clock, BookOpen } from "@phosphor-icons/react";
 
 interface CourseCardProps {
   course: Course;
@@ -28,6 +28,13 @@ export default function CourseCard({
           : "cursor-not-allowed border-[var(--color-border-light)]/60 bg-[var(--color-card)]/60 opacity-60"
       }`}
     >
+      {/* Discount Ribbon */}
+      {course.discountPercentage > 0 && (
+        <div className={`absolute top-0 left-6 -translate-y-1/2 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm transition-transform group-hover:scale-105 ${isAvailable ? 'bg-rose-500' : 'bg-[var(--color-border)]'}`}>
+          {course.discountPercentage}% OFF
+        </div>
+      )}
+
       {/* Badge */}
       <div className="mb-4 flex items-center justify-between">
         <div
@@ -73,31 +80,36 @@ export default function CourseCard({
         {course.description}
       </p>
 
-      {/* Meta */}
-      <div className="flex items-center gap-4 border-t border-[var(--color-border-light)] pt-4">
-        {course.lessons > 0 ? (
-          <>
-            <span className="flex items-center gap-1.5 text-xs text-[var(--color-accent-light)]">
-              <BookOpen size={14} />
-              {course.lessons} lessons
+      {/* Meta & Pricing */}
+      <div className="flex items-center justify-between border-t border-[var(--color-border-light)] pt-4">
+        <div className="flex flex-col gap-1">
+          {course.lessons > 0 ? (
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1.5 text-xs text-[var(--color-accent-light)]">
+                <BookOpen size={14} />
+                {course.lessons} lessons
+              </span>
+              <span className="flex items-center gap-1.5 text-xs text-[var(--color-accent-light)]">
+                <Clock size={14} />
+                {course.duration}
+              </span>
+            </div>
+          ) : (
+            <span className="text-xs italic text-[var(--color-border)]">
+              Details coming soon
             </span>
-            <span className="flex items-center gap-1.5 text-xs text-[var(--color-accent-light)]">
-              <Clock size={14} />
-              {course.duration}
-            </span>
-          </>
-        ) : (
-          <span className="text-xs italic text-[var(--color-border)]">
-            Details coming soon
-          </span>
-        )}
+          )}
+        </div>
 
-        {isAvailable && (
-          <span className="ml-auto flex items-center gap-1 text-xs font-semibold text-[var(--color-accent)] transition-transform group-hover:translate-x-1">
-            View Course
-            <ArrowRight size={14} />
+        {/* Pricing */}
+        <div className="flex flex-col items-end leading-none">
+          <span className={`text-[10px] font-bold uppercase tracking-wider ${isAvailable ? 'text-[var(--color-accent-light)] line-through decoration-rose-400/60' : 'text-[var(--color-border)] line-through'}`}>
+            ₹{course.originalPrice}
           </span>
-        )}
+          <span className={`font-[family-name:var(--font-serif)] text-lg font-bold ${isAvailable ? 'text-[var(--color-accent)] group-hover:text-rose-600 transition-colors' : 'text-[var(--color-border)]'}`}>
+            ₹{course.discountPrice}
+          </span>
+        </div>
       </div>
     </button>
   );

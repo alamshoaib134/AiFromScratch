@@ -5,7 +5,6 @@ import {
   Wrench,
   Eye,
 } from "@phosphor-icons/react";
-import { ComponentType } from "react";
 
 export interface Course {
   id: string;
@@ -19,6 +18,9 @@ export interface Course {
   lessons: number;
   duration: string;
   localStorageKey: string;
+  originalPrice: number;
+  discountPrice: number;
+  discountPercentage: number;
 }
 
 export const courses: Course[] = [
@@ -35,6 +37,9 @@ export const courses: Course[] = [
     lessons: 30,
     duration: "30 days",
     localStorageKey: "course_30_days_unlocked",
+    originalPrice: 14999,
+    discountPrice: 3999,
+    discountPercentage: 73,
   },
   {
     id: "hybrid-rag",
@@ -49,6 +54,9 @@ export const courses: Course[] = [
     lessons: 0,
     duration: "TBA",
     localStorageKey: "course_hybrid_rag_unlocked",
+    originalPrice: 19999,
+    discountPrice: 5999,
+    discountPercentage: 70,
   },
   {
     id: "agentic-ai",
@@ -63,6 +71,9 @@ export const courses: Course[] = [
     lessons: 0,
     duration: "TBA",
     localStorageKey: "course_agentic_ai_unlocked",
+    originalPrice: 24999,
+    discountPrice: 7999,
+    discountPercentage: 68,
   },
   {
     id: "fine-tuning",
@@ -77,6 +88,9 @@ export const courses: Course[] = [
     lessons: 0,
     duration: "TBA",
     localStorageKey: "course_fine_tuning_unlocked",
+    originalPrice: 14999,
+    discountPrice: 4999,
+    discountPercentage: 67,
   },
   {
     id: "multimodal-ai",
@@ -91,10 +105,14 @@ export const courses: Course[] = [
     lessons: 0,
     duration: "TBA",
     localStorageKey: "course_multimodal_unlocked",
+    originalPrice: 11999,
+    discountPrice: 2999,
+    discountPercentage: 75,
   },
 ];
 
 // Icon mapping for dynamic rendering
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const courseIcons: Record<string, any> = {
   Brain,
   Database,

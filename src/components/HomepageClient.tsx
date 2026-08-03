@@ -9,6 +9,8 @@ import PasscodeModal from "@/components/PasscodeModal";
 import {
   Sparkle,
   GraduationCap,
+  UserFocus,
+  ArrowUpRight,
 } from "@phosphor-icons/react";
 
 interface HomepageClientProps {
@@ -122,6 +124,51 @@ export default function HomepageClient({
                 index={index}
               />
             ))}
+          </div>
+        </section>
+
+        {/* About the Author */}
+        <section className="mt-20 border-t border-[var(--color-border-light)] pt-16">
+          <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:gap-10">
+            <div className="flex shrink-0 items-center justify-center sm:block">
+              <div className="relative h-28 w-28 overflow-hidden rounded-full border-4 border-white bg-white shadow-xl ring-1 ring-[var(--color-border-light)]">
+                <img 
+                  src="https://github.com/alamshoaib134.png" 
+                  alt="Shoaib Alam"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            </div>
+            
+            <div className="flex-1 text-center sm:text-left">
+              <div className="mb-2 flex items-center justify-center gap-2 sm:justify-start">
+                <UserFocus size={20} className="text-[var(--color-accent)]" />
+                <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent-light)]">
+                  About the Author
+                </p>
+              </div>
+              <h2 className="mb-2 font-[family-name:var(--font-serif)] text-3xl font-bold text-[var(--color-accent)]">
+                Shoaib Alam
+              </h2>
+              <p className="mb-4 text-sm font-semibold text-emerald-700">
+                AI Engineer at JPMC &bull; NLP Researcher (IIT Gandhinagar)
+              </p>
+              <p className="mb-6 max-w-3xl leading-relaxed text-[var(--color-accent-light)]">
+                I specialize in building fiduciary-grade hybrid RAG solutions and scalable AI systems for institutional finance. As a pioneer of Hybrid RAG at JPMC and published researcher at EMNLP 2024 (LEGOBench), I bridge the gap between cutting-edge AI research and production-ready enterprise applications.
+              </p>
+              <a
+                href="https://shoaibalam.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2 rounded-full border border-[var(--color-border-light)] bg-white px-5 py-2 text-sm font-semibold text-[var(--color-accent)] shadow-sm transition-all hover:-translate-y-0.5 hover:border-[var(--color-border)] hover:shadow-md"
+              >
+                View Full Portfolio
+                <ArrowUpRight
+                  size={16}
+                  className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                />
+              </a>
+            </div>
           </div>
         </section>
       </div>
