@@ -3,7 +3,7 @@ title: "What is Artificial Intelligence?"
 day: 1
 concept: "Defining AI and its scope"
 chapter: 1
-chapterTitle: "Foundations of AI"
+chapterTitle: "Foundations of AIB"
 ---
 
 # Day 1: What is Artificial Intelligence?
