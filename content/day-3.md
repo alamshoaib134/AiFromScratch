@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Text Embeddings"
 day: 3
 concept: "Narrow AI, General AI, and Super AI"
 chapter: 1
