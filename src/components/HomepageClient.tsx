@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { courses, Course } from "@/lib/courses";
 import CourseCard from "@/components/CourseCard";
@@ -17,31 +17,15 @@ interface HomepageClientProps {
   overviewContent: string;
 }
 
-// Check if course is unlocked in localStorage
-function createUnlockStore(key: string) {
-  function getSnapshot(): boolean {
-    if (typeof window === "undefined") return false;
-    try {
-      return localStorage.getItem(key) === "true";
-    } catch {
-      return false;
-    }
-  }
-  function getServerSnapshot(): boolean {
+// Helper to check localStorage safely
+function checkUnlocked(key: string): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return localStorage.getItem(key) === "true";
+  } catch {
     return false;
   }
-  function subscribe(callback: () => void): () => void {
-    window.addEventListener("storage", callback);
-    window.addEventListener("progress-updated", callback);
-    return () => {
-      window.removeEventListener("storage", callback);
-      window.removeEventListener("progress-updated", callback);
-    };
-  }
-  return { getSnapshot, getServerSnapshot, subscribe };
 }
-
-const unlockStore = createUnlockStore("course_30_days_unlocked");
 
 export default function HomepageClient({
   overviewContent,
@@ -49,28 +33,40 @@ export default function HomepageClient({
   const searchParams = useSearchParams();
   const unlockParam = searchParams.get("unlock");
 
-  const isUnlocked = useSyncExternalStore(
-    unlockStore.subscribe,
-    unlockStore.getSnapshot,
-    unlockStore.getServerSnapshot
-  );
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [previewCourse, setPreviewCourse] = useState<Course | null>(null);
+  const [showPasscode, setShowPasscode] = useState(false);
 
-  const [previewCourse, setPreviewCourse] = useState<Course | null>(
-    null
-  );
-  const [showPasscode, setShowPasscode] = useState(
-    unlockParam === "30-days-of-ai"
-  );
-
+  // On mount: check localStorage and decide whether to show the passcode modal
   useEffect(() => {
-    if (isUnlocked && showPasscode) {
-      setShowPasscode(false);
-      // Remove the unlock param from URL to clean it up
+    const unlocked = checkUnlocked("course_30_days_unlocked");
+    setIsUnlocked(unlocked);
+
+    if (unlockParam === "30-days-of-ai" && !unlocked) {
+      // Only show passcode if the course is NOT already unlocked
+      setShowPasscode(true);
+    }
+
+    // If already unlocked, clean up the URL param silently
+    if (unlocked && unlockParam) {
       const url = new URL(window.location.href);
       url.searchParams.delete("unlock");
       window.history.replaceState({}, "", url.toString());
     }
-  }, [isUnlocked, showPasscode]);
+  }, [unlockParam]);
+
+  // Listen for storage changes (e.g. when the passcode modal sets the key)
+  useEffect(() => {
+    const onStorageChange = () => {
+      setIsUnlocked(checkUnlocked("course_30_days_unlocked"));
+    };
+    window.addEventListener("storage", onStorageChange);
+    window.addEventListener("progress-updated", onStorageChange);
+    return () => {
+      window.removeEventListener("storage", onStorageChange);
+      window.removeEventListener("progress-updated", onStorageChange);
+    };
+  }, []);
 
   const handleSelectCourse = (course: Course) => {
     // If already unlocked, go directly to the course
