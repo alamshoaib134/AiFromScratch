@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useState, useSyncExternalStore, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { courses, Course } from "@/lib/courses";
 import CourseCard from "@/components/CourseCard";
@@ -61,6 +61,16 @@ export default function HomepageClient({
   const [showPasscode, setShowPasscode] = useState(
     unlockParam === "30-days-of-ai"
   );
+
+  useEffect(() => {
+    if (isUnlocked && showPasscode) {
+      setShowPasscode(false);
+      // Remove the unlock param from URL to clean it up
+      const url = new URL(window.location.href);
+      url.searchParams.delete("unlock");
+      window.history.replaceState({}, "", url.toString());
+    }
+  }, [isUnlocked, showPasscode]);
 
   const handleSelectCourse = (course: Course) => {
     // If already unlocked, go directly to the course
