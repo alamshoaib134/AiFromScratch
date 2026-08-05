@@ -1,12 +1,15 @@
 ---
-title: "Demystifying the Buzzwords — AI vs. Machine Learning vs. Deep Learning"
+title: "NLP"
 day: 1
-concept: "Defining AI and its scope"
+concept: "The bridge between human words and computer code"
 chapter: 1
-chapterTitle: "Foundations of AI"
+chapterTitle: "Foundations & Demystification"
 ---
 
 # Day 1: Demystifying the Buzzwords — AI vs. Machine Learning vs. Deep Learning
+
+
+![Day 1 Illustration](/images/ai_photos/day-1.png)
 
 ## Overview
 
