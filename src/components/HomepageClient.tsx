@@ -11,7 +11,10 @@ import {
   GraduationCap,
   UserFocus,
   ArrowUpRight,
+  Newspaper,
+  ArrowRight,
 } from "@phosphor-icons/react";
+import Link from "next/link";
 
 interface HomepageClientProps {
   overviewContent: string;
@@ -130,6 +133,40 @@ export default function HomepageClient({
                 index={index}
               />
             ))}
+
+            {/* Paper Everyday — special card */}
+            <Link
+              href="/papers"
+              className={`animate-fade-in stagger-${Math.min(courses.length + 1, 6)} group relative flex flex-col rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-amber-300`}
+            >
+              <div className="mb-4 flex items-center justify-between">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-md">
+                  <Newspaper size={22} weight="duotone" />
+                </div>
+                <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700 ring-1 ring-amber-200">
+                  Free • Daily
+                </span>
+              </div>
+
+              <h3 className="mb-1 font-[family-name:var(--font-serif)] text-lg font-bold leading-snug text-[var(--color-accent)] transition-colors group-hover:text-amber-700">
+                Paper Everyday
+              </h3>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-amber-600">
+                Research Simplified
+              </p>
+              <p className="mb-5 flex-1 text-sm leading-relaxed text-[var(--color-accent-light)]">
+                One AI research paper explained clearly every day. Stay at the
+                frontier of AI research — no jargon, just insight.
+              </p>
+
+              <div className="flex items-center border-t border-amber-200/60 pt-4 text-xs font-medium text-amber-600 transition-colors group-hover:text-amber-700">
+                <span>Browse papers</span>
+                <ArrowRight
+                  size={14}
+                  className="ml-1 transition-transform group-hover:translate-x-1"
+                />
+              </div>
+            </Link>
           </div>
         </section>
 

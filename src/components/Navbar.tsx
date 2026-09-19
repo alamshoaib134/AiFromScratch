@@ -7,6 +7,7 @@ import {
   List,
   X,
   GearSix,
+  Newspaper,
 } from "@phosphor-icons/react";
 import { useState } from "react";
 
@@ -50,6 +51,17 @@ export default function Navbar() {
             Courses
           </Link>
           <Link
+            href="/papers"
+            className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${
+              pathname.startsWith("/papers")
+                ? "text-[var(--color-accent)]"
+                : "text-[var(--color-accent-light)] hover:text-[var(--color-accent)]"
+            }`}
+          >
+            <Newspaper size={16} />
+            Paper Everyday
+          </Link>
+          <Link
             href="/admin"
             className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${
               isAdmin
@@ -86,6 +98,14 @@ export default function Navbar() {
               className="text-sm font-medium text-[var(--color-accent-light)] transition-colors hover:text-[var(--color-accent)]"
             >
               Courses
+            </Link>
+            <Link
+              href="/papers"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center gap-1.5 text-sm font-medium text-[var(--color-accent-light)] transition-colors hover:text-[var(--color-accent)]"
+            >
+              <Newspaper size={16} />
+              Paper Everyday
             </Link>
             <Link
               href="/admin"

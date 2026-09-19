@@ -11,6 +11,8 @@
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
     "@tailwindcss/typography": "^0.5.20",
+    "@types/better-sqlite3": "^9.6.0",
+    "better-sqlite3": "^13.0.3",
     "gray-matter": "^4.0.3",
     "jose": "^6.2.8",
     "next": "16.2.12",
