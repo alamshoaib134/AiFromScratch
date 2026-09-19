@@ -13,10 +13,10 @@ export async function GET(request: Request) {
     const total = getTotalPapersCount();
 
     return NextResponse.json({ papers, total, limit, offset });
-  } catch (err) {
+  } catch (err: any) {
     console.error("Papers API error:", err);
     return NextResponse.json(
-      { error: "Failed to load papers" },
+      { error: "Failed to load papers", details: err.message, stack: err.stack },
       { status: 500 }
     );
   }

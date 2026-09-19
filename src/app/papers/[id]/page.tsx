@@ -112,7 +112,7 @@ export default async function PaperDetailPage({ params }: PaperPageProps) {
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">
                 <Robot size={14} weight="fill" />
-                {paper.model_used || "AI Explained"}
+                {"AI Summary"}
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-alabaster)] px-2.5 py-1 text-xs font-semibold text-[var(--color-accent-light)] ring-1 ring-[var(--color-border-light)]">
                 <Calendar size={14} />
@@ -142,7 +142,7 @@ export default async function PaperDetailPage({ params }: PaperPageProps) {
 
           {/* Explanation Content */}
           <div className="animate-fade-in rounded-2xl border border-[var(--color-border-light)] bg-white p-8 shadow-sm sm:p-10">
-            <MarkdownRenderer content={paper.explanation} />
+            <MarkdownRenderer content={paper.ai_summary} />
           </div>
 
           {/* Navigation + arXiv link */}

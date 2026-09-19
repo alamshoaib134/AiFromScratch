@@ -40,7 +40,7 @@ export default function PapersPage() {
   // Group papers by date (using published_date or gen_timestamp)
   const grouped = new Map<string, typeof papers>();
   for (const p of papers) {
-    const dateKey = new Date(p.gen_timestamp).toLocaleDateString("en-US", {
+    const dateKey = new Date(p.submitted_on_daily).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
