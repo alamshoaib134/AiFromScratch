@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
   getPaperById,
-  getPapers,
+  getPapersWithExplanations,
 } from "@/lib/papers";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import {
@@ -55,7 +55,7 @@ export default async function PaperDetailPage({ params }: PaperPageProps) {
   }
 
   // Get all papers for the sidebar
-  const allPapers = getPapers(100, 0);
+  const allPapers = getPapersWithExplanations(100, 0);
 
   // Find prev/next based on position in the list
   const currentIdx = allPapers.findIndex((p) => p.paper_id === id);
@@ -112,7 +112,7 @@ export default async function PaperDetailPage({ params }: PaperPageProps) {
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">
                 <Robot size={14} weight="fill" />
-                {"AI Summary"}
+                {paper.model_used || "AI Explained"}
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-alabaster)] px-2.5 py-1 text-xs font-semibold text-[var(--color-accent-light)] ring-1 ring-[var(--color-border-light)]">
                 <Calendar size={14} />
@@ -142,7 +142,7 @@ export default async function PaperDetailPage({ params }: PaperPageProps) {
 
           {/* Explanation Content */}
           <div className="animate-fade-in rounded-2xl border border-[var(--color-border-light)] bg-white p-8 shadow-sm sm:p-10">
-            <MarkdownRenderer content={paper.ai_summary} />
+            <MarkdownRenderer content={paper.explanation} />
           </div>
 
           {/* Navigation + arXiv link */}

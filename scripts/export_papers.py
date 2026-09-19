@@ -16,16 +16,25 @@ def main():
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     
-    cursor.execute("SELECT * FROM paper_details ORDER BY submitted_on_daily DESC, published_date DESC")
+    query = """
+    SELECT
+      r.paper_id,
+      r.title,
+      r.authors,
+      r.published_date,
+      r.source_url,
+      r.abstract,
+      e.explanation,
+      e.model_used,
+      e.gen_timestamp
+    FROM explanations e
+    JOIN raw_papers r ON e.paper_id = r.paper_id
+    ORDER BY e.gen_timestamp DESC
+    """
+    cursor.execute(query)
     rows = cursor.fetchall()
     
-    papers = []
-    for row in rows:
-        paper_dict = dict(row)
-        # Remove massive text fields not needed by the frontend
-        paper_dict.pop('contents', None)
-        paper_dict.pop('references_text', None)
-        papers.append(paper_dict)
+    papers = [dict(row) for row in rows]
     
     with open(OUTPUT_PATH, 'w') as f:
         json.dump(papers, f, indent=2)

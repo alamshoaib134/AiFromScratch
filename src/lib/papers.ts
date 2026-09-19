@@ -1,46 +1,29 @@
 import papersData from "@/data/papers.json";
 
-export interface PaperDetail {
+export interface PaperWithExplanation {
   paper_id: string;
-  authors: string;
   title: string;
-  abstract: string;
-  contents: string;
-  references_text: string;
-  upvotes: number;
-  ai_summary: string;
-  ai_keywords: string;
-  github_repo: string;
-  github_stars: number;
-  project_page: string;
-  linked_models: string;
-  linked_datasets: string;
-  discussion_id: string;
-  organization: string;
-  media_urls: string;
-  thumbnail: string;
-  submitted_by: string;
+  authors: string;
   published_date: string;
-  submitted_on_daily: string;
-  num_comments: number;
   source_url: string;
-  load_timestamp: string;
-  categories: string;
-  arxiv_categories: string;
+  abstract: string;
+  explanation: string;
+  model_used: string;
+  gen_timestamp: string;
 }
 
 // Cast the imported JSON to our interface
-const allPapers = papersData as unknown as PaperDetail[];
+const allPapers = papersData as unknown as PaperWithExplanation[];
 
-export function getPapers(
+export function getPapersWithExplanations(
   limit = 20,
   offset = 0
-): PaperDetail[] {
+): PaperWithExplanation[] {
   // Data is already ordered by the python script, but we can return a slice
   return allPapers.slice(offset, offset + limit);
 }
 
-export function getPaperById(paper_id: string): PaperDetail | null {
+export function getPaperById(paper_id: string): PaperWithExplanation | null {
   const paper = allPapers.find((p) => p.paper_id === paper_id);
   return paper || null;
 }
