@@ -1,4 +1,4 @@
-import { getPapersWithExplanations, getTotalPapersCount } from "@/lib/papers";
+import { getPapers, getTotalPapersCount } from "@/lib/papers";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -34,7 +34,7 @@ function formatAuthors(authors: string): string {
 }
 
 export default function PapersPage() {
-  const papers = getPapersWithExplanations(100, 0);
+  const papers = getPapers(100, 0);
   const total = getTotalPapersCount();
 
   // Group papers by date (using published_date or gen_timestamp)

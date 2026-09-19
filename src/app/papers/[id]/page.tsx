@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
   getPaperById,
-  getPapersWithExplanations,
+  getPapers,
 } from "@/lib/papers";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import {
@@ -55,7 +55,7 @@ export default async function PaperDetailPage({ params }: PaperPageProps) {
   }
 
   // Get all papers for the sidebar
-  const allPapers = getPapersWithExplanations(100, 0);
+  const allPapers = getPapers(100, 0);
 
   // Find prev/next based on position in the list
   const currentIdx = allPapers.findIndex((p) => p.paper_id === id);

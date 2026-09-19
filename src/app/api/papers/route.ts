@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getPapersWithExplanations, getTotalPapersCount } from "@/lib/papers";
+import { getPapers, getTotalPapersCount } from "@/lib/papers";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +9,7 @@ export async function GET(request: Request) {
     const limit = Math.min(parseInt(searchParams.get("limit") || "10"), 50);
     const offset = parseInt(searchParams.get("offset") || "0");
 
-    const papers = getPapersWithExplanations(limit, offset);
+    const papers = getPapers(limit, offset);
     const total = getTotalPapersCount();
 
     return NextResponse.json({ papers, total, limit, offset });
