@@ -1,6 +1,7 @@
+import os
+import re
 import sqlite3
 import json
-import os
 
 DB_PATH = "/Users/shoaib/Desktop/paper_summ/papers.db"
 OUTPUT_PATH = "src/data/papers.json"
@@ -26,9 +27,11 @@ def main():
       r.abstract,
       e.explanation,
       e.model_used,
-      e.gen_timestamp
+      e.gen_timestamp,
+      pd.arxiv_categories
     FROM explanations e
     JOIN raw_papers r ON e.paper_id = r.paper_id
+    LEFT JOIN paper_details pd ON e.paper_id = pd.paper_id
     ORDER BY e.gen_timestamp DESC
     """
     cursor.execute(query)

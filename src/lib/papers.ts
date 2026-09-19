@@ -10,6 +10,7 @@ export interface PaperWithExplanation {
   explanation: string;
   model_used: string;
   gen_timestamp: string;
+  arxiv_categories: string | null;
 }
 
 // Cast the imported JSON to our interface
