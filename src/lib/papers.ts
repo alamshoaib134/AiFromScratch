@@ -1,77 +1,50 @@
-import Database from "better-sqlite3";
+import papersData from "@/data/papers.json";
 
-const DB_PATH =
-  process.env.PAPERS_DB_PATH ||
-  "/Users/shoaib/Desktop/paper_summ/papers.db";
-
-export interface PaperWithExplanation {
+export interface PaperDetail {
   paper_id: string;
-  title: string;
   authors: string;
-  published_date: string;
-  source_url: string;
+  title: string;
   abstract: string;
-  explanation: string;
-  model_used: string;
-  gen_timestamp: string;
+  contents: string;
+  references_text: string;
+  upvotes: number;
+  ai_summary: string;
+  ai_keywords: string;
+  github_repo: string;
+  github_stars: number;
+  project_page: string;
+  linked_models: string;
+  linked_datasets: string;
+  discussion_id: string;
+  organization: string;
+  media_urls: string;
+  thumbnail: string;
+  submitted_by: string;
+  published_date: string;
+  submitted_on_daily: string;
+  num_comments: number;
+  source_url: string;
+  load_timestamp: string;
+  categories: string;
+  arxiv_categories: string;
 }
 
-let _db: Database.Database | null = null;
+// Cast the imported JSON to our interface
+const allPapers = papersData as unknown as PaperDetail[];
 
-function getDb(): Database.Database {
-  if (!_db) {
-    _db = new Database(DB_PATH, { readonly: true });
-  }
-  return _db;
-}
-
-export function getPapersWithExplanations(
+export function getPapers(
   limit = 20,
   offset = 0
-): PaperWithExplanation[] {
-  const db = getDb();
-  const stmt = db.prepare(`
-    SELECT
-      r.paper_id,
-      r.title,
-      r.authors,
-      r.published_date,
-      r.source_url,
-      r.abstract,
-      e.explanation,
-      e.model_used,
-      e.gen_timestamp
-    FROM explanations e
-    JOIN raw_papers r ON e.paper_id = r.paper_id
-    ORDER BY e.gen_timestamp DESC
-    LIMIT ? OFFSET ?
-  `);
-  return stmt.all(limit, offset) as PaperWithExplanation[];
+): PaperDetail[] {
+  // Data is already ordered by the python script, but we can return a slice
+  return allPapers.slice(offset, offset + limit);
 }
 
-export function getPaperById(paper_id: string): PaperWithExplanation | null {
-  const db = getDb();
-  const stmt = db.prepare(`
-    SELECT
-      r.paper_id,
-      r.title,
-      r.authors,
-      r.published_date,
-      r.source_url,
-      r.abstract,
-      e.explanation,
-      e.model_used,
-      e.gen_timestamp
-    FROM explanations e
-    JOIN raw_papers r ON e.paper_id = r.paper_id
-    WHERE e.paper_id = ?
-  `);
-  return (stmt.get(paper_id) as PaperWithExplanation) ?? null;
+export function getPaperById(paper_id: string): PaperDetail | null {
+  const paper = allPapers.find((p) => p.paper_id === paper_id);
+  return paper || null;
 }
 
 export function getTotalPapersCount(): number {
-  const db = getDb();
-  const stmt = db.prepare(`SELECT COUNT(*) as count FROM explanations`);
-  const row = stmt.get() as { count: number };
-  return row.count;
+  return allPapers.length;
 }
