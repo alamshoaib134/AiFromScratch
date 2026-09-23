@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getDayContent, getAllDays } from "@/lib/content";
+import { courses, getCourseById } from "@/lib/courses";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import CompletionButton from "@/components/CompletionButton";
 import CourseGuard from "@/components/CourseGuard";
@@ -11,44 +12,58 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 
 interface DayPageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ courseId: string; slug: string }>;
 }
 
 export function generateStaticParams() {
-  const days = getAllDays();
-  return days.map((day) => ({ slug: `${day.day}` }));
+  const params: { courseId: string; slug: string }[] = [];
+  for (const course of courses) {
+    if (course.status !== "available") continue;
+    const days = getAllDays(course.id);
+    for (const day of days) {
+      params.push({ courseId: course.id, slug: `${day.day}` });
+    }
+  }
+  return params;
 }
 
 export async function generateMetadata({ params }: DayPageProps) {
-  const { slug } = await params;
+  const { courseId, slug } = await params;
+  const course = getCourseById(courseId);
+  if (!course) return { title: "Course Not Found" };
+
   const dayNum = parseInt(slug, 10);
-  const day = getDayContent(dayNum);
+  const day = getDayContent(courseId, dayNum);
 
   if (!day) return { title: "Day Not Found" };
 
   return {
-    title: `Day ${day.day}: ${day.title} | 30-Day AI Challenge`,
+    title: `Day ${day.day}: ${day.title} | ${course.title}`,
     description: day.concept,
   };
 }
 
 export default async function DayPage({ params }: DayPageProps) {
-  const { slug } = await params;
+  const { courseId, slug } = await params;
+  const course = getCourseById(courseId);
+  if (!course) notFound();
+
   const dayNum = parseInt(slug, 10);
 
   if (isNaN(dayNum) || dayNum < 1 || dayNum > 30) {
     notFound();
   }
 
-  const day = getDayContent(dayNum);
+  const day = getDayContent(courseId, dayNum);
   if (!day) notFound();
 
-  const allDays = getAllDays();
+  const allDays = getAllDays(courseId);
   const prevDay = dayNum > 1 ? dayNum - 1 : null;
-  const nextDay = dayNum < 30 ? dayNum + 1 : null;
+  // TODO: Fix hardcoded 30 nextDay check if dynamic length is needed, for now use allDays.length
+  const nextDay = dayNum < allDays.length ? dayNum + 1 : null;
 
   return (
-    <CourseGuard localStorageKey="course_30_days_unlocked">
+    <CourseGuard localStorageKey={course.localStorageKey} courseId={courseId}>
       <div className="mx-auto max-w-6xl px-6 py-10">
         <div className="flex gap-10">
           {/* Sidebar — Day List */}
@@ -61,7 +76,7 @@ export default async function DayPage({ params }: DayPageProps) {
                 {allDays.map((d) => (
                   <Link
                     key={d.day}
-                    href={`/course/30-days-of-ai/day/${d.day}`}
+                    href={`/course/${courseId}/day/${d.day}`}
                     className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors ${
                       d.day === dayNum
                         ? "bg-[var(--color-accent)] font-medium text-white"
@@ -83,11 +98,11 @@ export default async function DayPage({ params }: DayPageProps) {
             {/* Breadcrumb */}
             <div className="animate-fade-in mb-8">
               <Link
-                href="/course/30-days-of-ai"
+                href={`/course/${courseId}`}
                 className="inline-flex items-center gap-1.5 text-sm text-[var(--color-accent-light)] transition-colors hover:text-[var(--color-accent)]"
               >
                 <ArrowLeft size={14} />
-                Back to 30 Days of AI
+                Back to {course.title}
               </Link>
 
               <div className="mt-4 flex items-center gap-3">
@@ -117,14 +132,14 @@ export default async function DayPage({ params }: DayPageProps) {
             <div className="mt-8 flex flex-col gap-6">
               {/* Mark Complete */}
               <div className="flex justify-center">
-                <CompletionButton day={day.day} />
+                <CompletionButton day={day.day} courseId={courseId} />
               </div>
 
               {/* Prev / Next */}
               <div className="flex items-center justify-between">
                 {prevDay ? (
                   <Link
-                    href={`/course/30-days-of-ai/day/${prevDay}`}
+                    href={`/course/${courseId}/day/${prevDay}`}
                     className="inline-flex items-center gap-2 rounded-xl border border-[var(--color-border-light)] bg-white px-5 py-3 text-sm font-medium text-[var(--color-accent-light)] shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md hover:text-[var(--color-accent)]"
                   >
                     <ArrowLeft size={16} />
@@ -135,7 +150,7 @@ export default async function DayPage({ params }: DayPageProps) {
                 )}
                 {nextDay ? (
                   <Link
-                    href={`/course/30-days-of-ai/day/${nextDay}`}
+                    href={`/course/${courseId}/day/${nextDay}`}
                     className="inline-flex items-center gap-2 rounded-xl bg-[var(--color-accent)] px-5 py-3 text-sm font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
                   >
                     Day {nextDay}

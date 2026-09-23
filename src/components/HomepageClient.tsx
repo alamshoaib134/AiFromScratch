@@ -40,28 +40,34 @@ export default function HomepageClient({
   const [previewCourse, setPreviewCourse] = useState<Course | null>(null);
   const [showPasscode, setShowPasscode] = useState(false);
 
-  // On mount: check localStorage and decide whether to show the passcode modal
+  // We use previewCourse for the unlock flow too, to know which course to unlock.
+  // Instead of a single isUnlocked state, we should check it per course, or since previewCourse handles unlocking:
+  const [unlockingCourse, setUnlockingCourse] = useState<Course | null>(null);
+
+  // On mount: check if URL asks to unlock a specific course
   useEffect(() => {
-    const unlocked = checkUnlocked("course_30_days_unlocked");
-    setIsUnlocked(unlocked);
-
-    if (unlockParam === "30-days-of-ai" && !unlocked) {
-      // Only show passcode if the course is NOT already unlocked
-      setShowPasscode(true);
-    }
-
-    // If already unlocked, clean up the URL param silently
-    if (unlocked && unlockParam) {
-      const url = new URL(window.location.href);
-      url.searchParams.delete("unlock");
-      window.history.replaceState({}, "", url.toString());
+    if (unlockParam) {
+      const course = courses.find((c) => c.id === unlockParam);
+      if (course) {
+        const unlocked = checkUnlocked(course.localStorageKey);
+        if (!unlocked) {
+          setUnlockingCourse(course);
+          setShowPasscode(true);
+        } else {
+          // If already unlocked, clean up the URL param silently
+          const url = new URL(window.location.href);
+          url.searchParams.delete("unlock");
+          window.history.replaceState({}, "", url.toString());
+        }
+      }
     }
   }, [unlockParam]);
 
   // Listen for storage changes (e.g. when the passcode modal sets the key)
   useEffect(() => {
     const onStorageChange = () => {
-      setIsUnlocked(checkUnlocked("course_30_days_unlocked"));
+      // Force re-render on storage change so CourseCard UI updates
+      setIsUnlocked((prev) => !prev);
     };
     window.addEventListener("storage", onStorageChange);
     window.addEventListener("progress-updated", onStorageChange);
@@ -72,8 +78,10 @@ export default function HomepageClient({
   }, []);
 
   const handleSelectCourse = (course: Course) => {
+    if (course.status !== "available") return;
+    
     // If already unlocked, go directly to the course
-    if (course.localStorageKey === "course_30_days_unlocked" && isUnlocked) {
+    if (checkUnlocked(course.localStorageKey)) {
       window.location.href = `/course/${course.id}`;
       return;
     }
@@ -81,6 +89,7 @@ export default function HomepageClient({
   };
 
   const handleUnlock = () => {
+    setUnlockingCourse(previewCourse);
     setPreviewCourse(null);
     setShowPasscode(true);
   };
@@ -229,13 +238,15 @@ export default function HomepageClient({
       )}
 
       {/* Passcode Modal */}
-      <PasscodeModal
-        key={showPasscode ? "open" : "closed"}
-        isOpen={showPasscode}
-        onClose={() => setShowPasscode(false)}
-        courseId="30-days-of-ai"
-        localStorageKey="course_30_days_unlocked"
-      />
+      {unlockingCourse && (
+        <PasscodeModal
+          key={showPasscode ? "open" : "closed"}
+          isOpen={showPasscode}
+          onClose={() => setShowPasscode(false)}
+          courseId={unlockingCourse.id}
+          localStorageKey={unlockingCourse.localStorageKey}
+        />
+      )}
     </>
   );
 }

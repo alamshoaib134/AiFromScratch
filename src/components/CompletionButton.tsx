@@ -5,13 +5,14 @@ import { CheckCircle, Circle } from "@phosphor-icons/react";
 
 interface CompletionButtonProps {
   day: number;
+  courseId: string;
 }
 
-function createCompletionStore(day: number) {
+function createCompletionStore(day: number, courseId: string) {
   function getSnapshot(): boolean {
     if (typeof window === "undefined") return false;
     try {
-      const stored = localStorage.getItem("ai-challenge-progress");
+      const stored = localStorage.getItem(`${courseId}-progress`);
       if (!stored) return false;
       const progress: Record<string, boolean> = JSON.parse(stored);
       return !!progress[`day-${day}`];
@@ -36,8 +37,8 @@ function createCompletionStore(day: number) {
   return { getSnapshot, getServerSnapshot, subscribe };
 }
 
-export default function CompletionButton({ day }: CompletionButtonProps) {
-  const store = createCompletionStore(day);
+export default function CompletionButton({ day, courseId }: CompletionButtonProps) {
+  const store = createCompletionStore(day, courseId);
   const completed = useSyncExternalStore(
     store.subscribe,
     store.getSnapshot,
@@ -45,7 +46,7 @@ export default function CompletionButton({ day }: CompletionButtonProps) {
   );
 
   const toggle = () => {
-    const stored = localStorage.getItem("ai-challenge-progress");
+    const stored = localStorage.getItem(`${courseId}-progress`);
     const progress: Record<string, boolean> = stored ? JSON.parse(stored) : {};
 
     const newState = !completed;
@@ -55,7 +56,7 @@ export default function CompletionButton({ day }: CompletionButtonProps) {
       delete progress[`day-${day}`];
     }
 
-    localStorage.setItem("ai-challenge-progress", JSON.stringify(progress));
+    localStorage.setItem(`${courseId}-progress`, JSON.stringify(progress));
     // Dispatch custom event so other components re-read localStorage
     window.dispatchEvent(new Event("progress-updated"));
   };

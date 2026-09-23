@@ -1,10 +1,3 @@
-import {
-  Brain,
-  Database,
-  Robot,
-  Wrench,
-  Eye,
-} from "@phosphor-icons/react";
 
 export interface Course {
   id: string;
@@ -47,12 +40,12 @@ export const courses: Course[] = [
     subtitle: "Advanced Retrieval",
     description:
       "Master retrieval-augmented generation with hybrid search, re-ranking, multi-hop reasoning, and production-grade RAG pipelines.",
-    status: "coming-soon",
-    badge: "Coming Soon",
+    status: "available",
+    badge: "Active",
     iconName: "Database",
-    chapters: 0,
-    lessons: 0,
-    duration: "TBA",
+    chapters: 1,
+    lessons: 2,
+    duration: "2 days",
     localStorageKey: "course_hybrid_rag_unlocked",
     originalPrice: 19999,
     discountPrice: 5999,
@@ -111,15 +104,6 @@ export const courses: Course[] = [
   },
 ];
 
-// Icon mapping for dynamic rendering
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const courseIcons: Record<string, any> = {
-  Brain,
-  Database,
-  Robot,
-  Wrench,
-  Eye,
-};
 
 export function getCourseById(id: string): Course | undefined {
   return courses.find((c) => c.id === id);

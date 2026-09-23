@@ -5,11 +5,13 @@ import { useRouter } from "next/navigation";
 
 interface CourseGuardProps {
   localStorageKey: string;
+  courseId: string;
   children: React.ReactNode;
 }
 
 export default function CourseGuard({
   localStorageKey,
+  courseId,
   children,
 }: CourseGuardProps) {
   const router = useRouter();
@@ -25,11 +27,11 @@ export default function CourseGuard({
         setStatus("unlocked");
       } else {
         setStatus("locked");
-        router.replace("/?unlock=30-days-of-ai");
+        router.replace(`/?unlock=${courseId}`);
       }
     } catch {
       setStatus("locked");
-      router.replace("/?unlock=30-days-of-ai");
+      router.replace(`/?unlock=${courseId}`);
     }
   }, [localStorageKey, router]);
 

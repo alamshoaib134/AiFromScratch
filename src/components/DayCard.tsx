@@ -9,13 +9,14 @@ interface DayCardProps {
   title: string;
   concept: string;
   index: number;
+  courseId: string;
 }
 
-function createDayStore(day: number) {
+function createDayStore(day: number, courseId: string) {
   function getSnapshot(): boolean {
     if (typeof window === "undefined") return false;
     try {
-      const stored = localStorage.getItem("ai-challenge-progress");
+      const stored = localStorage.getItem(`${courseId}-progress`);
       if (!stored) return false;
       const progress: Record<string, boolean> = JSON.parse(stored);
       return !!progress[`day-${day}`];
@@ -40,8 +41,8 @@ function createDayStore(day: number) {
   return { getSnapshot, getServerSnapshot, subscribe };
 }
 
-export default function DayCard({ day, title, concept, index }: DayCardProps) {
-  const store = createDayStore(day);
+export default function DayCard({ day, title, concept, index, courseId }: DayCardProps) {
+  const store = createDayStore(day, courseId);
   const completed = useSyncExternalStore(
     store.subscribe,
     store.getSnapshot,
@@ -52,7 +53,7 @@ export default function DayCard({ day, title, concept, index }: DayCardProps) {
 
   return (
     <Link
-      href={`/course/30-days-of-ai/day/${day}`}
+      href={`/course/${courseId}/day/${day}`}
       className={`animate-fade-in ${staggerClass} group relative flex flex-col rounded-2xl border bg-[var(--color-card)] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
         completed
           ? "border-[var(--color-success)]/30 bg-[var(--color-success-light)]/30"

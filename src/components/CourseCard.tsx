@@ -1,7 +1,24 @@
 "use client";
 
-import { Course, courseIcons } from "@/lib/courses";
-import { Clock, BookOpen } from "@phosphor-icons/react";
+import { Course } from "@/lib/courses";
+import {
+  Clock,
+  BookOpen,
+  Brain,
+  Database,
+  Robot,
+  Wrench,
+  Eye,
+} from "@phosphor-icons/react";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const courseIcons: Record<string, any> = {
+  Brain,
+  Database,
+  Robot,
+  Wrench,
+  Eye,
+};
 
 interface CourseCardProps {
   course: Course;

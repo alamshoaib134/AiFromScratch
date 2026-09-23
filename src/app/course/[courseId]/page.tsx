@@ -1,4 +1,6 @@
 import { getChapters } from "@/lib/content";
+import { getCourseById } from "@/lib/courses";
+import { notFound } from "next/navigation";
 import CourseGuard from "@/components/CourseGuard";
 import ProgressBar from "@/components/ProgressBar";
 import DayCard from "@/components/DayCard";
@@ -6,14 +8,25 @@ import { BookOpen } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
 
-export default function CourseViewerPage() {
-  const chapters = getChapters();
+interface CourseViewerPageProps {
+  params: Promise<{ courseId: string }>;
+}
+
+export default async function CourseViewerPage({ params }: CourseViewerPageProps) {
+  const { courseId } = await params;
+  const course = getCourseById(courseId);
+  
+  if (!course) {
+    notFound();
+  }
+
+  const chapters = getChapters(courseId);
   const totalDays = chapters.reduce((sum, ch) => sum + ch.days.length, 0);
 
   let globalIndex = 0;
 
   return (
-    <CourseGuard localStorageKey="course_30_days_unlocked">
+    <CourseGuard localStorageKey={course.localStorageKey} courseId={courseId}>
       <div className="mx-auto max-w-6xl px-6 py-10">
         {/* Breadcrumb */}
         <div className="animate-fade-in mb-8">
@@ -29,12 +42,11 @@ export default function CourseViewerPage() {
         {/* Course Header */}
         <section className="animate-fade-in mb-12 text-center">
           <h1 className="font-[family-name:var(--font-serif)] text-3xl font-bold leading-tight tracking-tight text-[var(--color-accent)] sm:text-4xl md:text-5xl">
-            30 Days of AI Challenge
+            {course.title}
           </h1>
 
           <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-accent-light)]">
-            The ultimate guide to the vocabulary, mechanics, and future of
-            Artificial Intelligence. From NLP fundamentals to AGI.
+            {course.description}
           </p>
 
           {/* Progress Bar */}
@@ -72,6 +84,7 @@ export default function CourseViewerPage() {
                     title={day.title}
                     concept={day.concept}
                     index={idx}
+                    courseId={courseId}
                   />
                 );
               })}

@@ -21,18 +21,19 @@ export interface Chapter {
   days: DayMeta[];
 }
 
-const contentDir = path.join(process.cwd(), "content");
+const baseContentDir = path.join(process.cwd(), "content");
 
 /**
- * Get metadata for all 30 days, sorted by day number.
+ * Get metadata for all days in a course, sorted by day number.
  */
-export function getAllDays(): DayMeta[] {
-  if (!fs.existsSync(contentDir)) return [];
+export function getAllDays(courseId: string): DayMeta[] {
+  const courseContentDir = path.join(baseContentDir, courseId);
+  if (!fs.existsSync(courseContentDir)) return [];
 
-  const files = fs.readdirSync(contentDir).filter((f) => f.startsWith("day-") && f.endsWith(".md"));
+  const files = fs.readdirSync(courseContentDir).filter((f) => f.startsWith("day-") && f.endsWith(".md"));
 
   const days = files.map((filename) => {
-    const filePath = path.join(contentDir, filename);
+    const filePath = path.join(courseContentDir, filename);
     const raw = fs.readFileSync(filePath, "utf-8");
     const { data } = matter(raw);
 
@@ -50,11 +51,11 @@ export function getAllDays(): DayMeta[] {
 }
 
 /**
- * Get full content for a single day.
+ * Get full content for a single day in a course.
  */
-export function getDayContent(day: number): DayContent | null {
+export function getDayContent(courseId: string, day: number): DayContent | null {
   const filename = `day-${day}.md`;
-  const filePath = path.join(contentDir, filename);
+  const filePath = path.join(baseContentDir, courseId, filename);
 
   if (!fs.existsSync(filePath)) return null;
 
@@ -75,8 +76,8 @@ export function getDayContent(day: number): DayContent | null {
 /**
  * Group days into chapters.
  */
-export function getChapters(): Chapter[] {
-  const days = getAllDays();
+export function getChapters(courseId: string): Chapter[] {
+  const days = getAllDays(courseId);
   const chapterMap = new Map<number, Chapter>();
 
   for (const day of days) {

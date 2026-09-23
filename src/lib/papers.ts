@@ -14,6 +14,7 @@ export interface PaperWithExplanation {
 }
 
 // Cast the imported JSON to our interface
+// (Updated to trigger hot-reload for new data)
 const allPapers = papersData as unknown as PaperWithExplanation[];
 
 export function getPapersWithExplanations(
