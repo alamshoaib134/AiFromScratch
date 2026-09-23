@@ -25,7 +25,8 @@ export async function saveDayAction(
       };
     }
 
-    const filePath = `content/day-${day}.md`;
+    const courseId = "30-days-of-ai"; // TODO: make admin panel dynamic
+    const filePath = `content/${courseId}/day-${day}.md`;
     const commitMessage = `Update Day ${day}: ${data.title}`;
 
     await saveMarkdownFile(filePath, content, commitMessage);
@@ -93,7 +94,8 @@ export async function getDayRawContent(
   day: number
 ): Promise<{ success: boolean; content?: string; error?: string }> {
   try {
-    const dayContent = getDayContent(day);
+    const courseId = "30-days-of-ai"; // TODO: make admin panel dynamic
+    const dayContent = getDayContent(courseId, day);
     if (!dayContent) {
       return { success: false, error: "Day not found" };
     }
@@ -101,7 +103,7 @@ export async function getDayRawContent(
     // Read the raw file including frontmatter
     const fs = await import("fs");
     const path = await import("path");
-    const filePath = path.join(process.cwd(), "content", `day-${day}.md`);
+    const filePath = path.join(process.cwd(), "content", courseId, `day-${day}.md`);
     const raw = fs.readFileSync(filePath, "utf-8");
 
     return { success: true, content: raw };
