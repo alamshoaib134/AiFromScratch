@@ -227,6 +227,102 @@ body {
 .stagger-5 { animation-delay: 0.25s; opacity: 0; }
 .stagger-6 { animation-delay: 0.3s; opacity: 0; }
 
+/* ─── Course Layout (Wide-screen) ─── */
+.course-layout {
+  /* Let the layout fill edge-to-edge; the sidebar + content split the space */
+}
+
+.course-sidebar nav::-webkit-scrollbar {
+  width: 4px;
+}
+.course-sidebar nav::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 2px;
+}
+
+/* Content area: remove the cramped card wrapper; let prose breathe */
+.course-content .prose {
+  max-width: none;
+  font-size: 1.0625rem; /* slightly larger for readability at wide widths */
+}
+
+.course-content .prose h1 {
+  font-size: 2rem;
+}
+
+.course-content .prose h2 {
+  font-size: 1.625rem;
+  margin-top: 3rem;
+}
+
+.course-content .prose h3 {
+  font-size: 1.3rem;
+  margin-top: 2.25rem;
+}
+
+/* Tables: allow horizontal scroll for wide tables */
+.course-content .prose table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.course-content .prose th,
+.course-content .prose td {
+  white-space: nowrap;
+}
+
+/* But allow text wrapping in cells with long content */
+.course-content .prose td:last-child,
+.course-content .prose th:last-child {
+  white-space: normal;
+  min-width: 200px;
+}
+
+/* Code blocks: more breathing room at wide widths */
+.course-content .prose pre {
+  padding: 1.5rem;
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+/* Blockquotes: slightly wider look */
+.course-content .prose blockquote {
+  padding: 1.25rem 1.75rem;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Details/summary (quiz answers) */
+.course-content .prose details {
+  border: 1px solid var(--color-border-light);
+  border-radius: 0.75rem;
+  padding: 0;
+  margin-top: 1.5rem;
+  overflow: hidden;
+}
+
+.course-content .prose details summary {
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  font-weight: 600;
+  background: var(--color-alabaster);
+  transition: background 0.2s;
+}
+
+.course-content .prose details summary:hover {
+  background: var(--color-border-light);
+}
+
+.course-content .prose details[open] summary {
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.course-content .prose details > *:not(summary) {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
 /* ─── Selection ─── */
 ::selection {
   background: var(--color-accent);

@@ -9,6 +9,7 @@ import {
   ArrowLeft,
   ArrowRight,
   BookOpen,
+  Clock,
 } from "@phosphor-icons/react/dist/ssr";
 
 interface DayPageProps {
@@ -64,86 +65,129 @@ export default async function DayPage({ params }: DayPageProps) {
 
   return (
     <CourseGuard localStorageKey={course.localStorageKey} courseId={courseId}>
-      <div className="mx-auto max-w-6xl px-6 py-10">
-        <div className="flex gap-10">
-          {/* Sidebar — Day List */}
-          <aside className="hidden w-64 shrink-0 lg:block">
-            <div className="sticky top-24">
-              <h3 className="mb-4 font-[family-name:var(--font-serif)] text-sm font-bold uppercase tracking-wider text-[var(--color-accent-light)]">
-                All Lessons
+      <div className="course-layout flex min-h-[calc(100vh-4rem)]">
+        {/* Sidebar — fixed, independently scrollable */}
+        <aside className="course-sidebar hidden w-72 shrink-0 border-r border-[var(--color-border-light)] bg-white lg:block">
+          <div className="sticky top-16 flex h-[calc(100vh-4rem)] flex-col">
+            {/* Sidebar header */}
+            <div className="border-b border-[var(--color-border-light)] px-5 py-4">
+              <Link
+                href={`/course/${courseId}`}
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--color-accent-light)] transition-colors hover:text-[var(--color-accent)]"
+              >
+                <ArrowLeft size={12} />
+                Back to {course.title}
+              </Link>
+              <h3 className="mt-2 font-[family-name:var(--font-serif)] text-sm font-bold uppercase tracking-wider text-[var(--color-accent)]">
+                Course Content
               </h3>
-              <nav className="flex flex-col gap-0.5">
+            </div>
+
+            {/* Scrollable lesson list */}
+            <nav className="flex-1 overflow-y-auto px-3 py-3">
+              <div className="flex flex-col gap-0.5">
                 {allDays.map((d) => (
                   <Link
                     key={d.day}
                     href={`/course/${courseId}/day/${d.day}`}
-                    className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors ${
+                    className={`group flex items-start gap-3 rounded-lg px-3 py-2.5 text-sm transition-all ${
                       d.day === dayNum
-                        ? "bg-[var(--color-accent)] font-medium text-white"
-                        : "text-[var(--color-accent-light)] hover:bg-[var(--color-border-light)] hover:text-[var(--color-accent)]"
+                        ? "bg-[var(--color-accent)] font-medium text-white shadow-sm"
+                        : "text-[var(--color-accent-light)] hover:bg-[var(--color-alabaster)] hover:text-[var(--color-accent)]"
                     }`}
                   >
-                    <span className="w-6 shrink-0 text-xs opacity-60">
+                    <span
+                      className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
+                        d.day === dayNum
+                          ? "bg-white/20 text-white"
+                          : "bg-[var(--color-border-light)] text-[var(--color-accent-light)] group-hover:bg-[var(--color-border)]"
+                      }`}
+                    >
                       {d.day}
                     </span>
-                    <span className="truncate">{d.title}</span>
+                    <span className="leading-snug">{d.title}</span>
                   </Link>
                 ))}
-              </nav>
-            </div>
-          </aside>
+              </div>
+            </nav>
+          </div>
+        </aside>
 
-          {/* Main Content */}
-          <article className="min-w-0 flex-1">
-            {/* Breadcrumb */}
-            <div className="animate-fade-in mb-8">
-              <Link
-                href={`/course/${courseId}`}
-                className="inline-flex items-center gap-1.5 text-sm text-[var(--color-accent-light)] transition-colors hover:text-[var(--color-accent)]"
-              >
-                <ArrowLeft size={14} />
-                Back to {course.title}
-              </Link>
-
-              <div className="mt-4 flex items-center gap-3">
+        {/* Main Content — full remaining width */}
+        <article className="min-w-0 flex-1">
+          {/* Top bar with chapter + day badge */}
+          <div className="sticky top-16 z-10 border-b border-[var(--color-border-light)] bg-[var(--color-alabaster)]/95 backdrop-blur-sm">
+            <div className="mx-auto flex max-w-5xl items-center justify-between px-8 py-3 xl:px-12">
+              <div className="flex items-center gap-3">
                 <span className="inline-flex items-center gap-1.5 rounded-lg bg-[var(--color-accent)]/10 px-3 py-1 text-xs font-semibold text-[var(--color-accent)]">
                   <BookOpen size={14} weight="duotone" />
                   Chapter {day.chapter}: {day.chapterTitle}
                 </span>
-                <span className="rounded-lg bg-[var(--color-alabaster)] px-2.5 py-1 text-xs font-semibold text-[var(--color-accent-light)] ring-1 ring-[var(--color-border-light)]">
+                <span className="rounded-lg bg-white px-2.5 py-1 text-xs font-semibold text-[var(--color-accent-light)] ring-1 ring-[var(--color-border-light)]">
                   DAY {day.day}
                 </span>
               </div>
+              <div className="hidden items-center gap-3 sm:flex">
+                {prevDay && (
+                  <Link
+                    href={`/course/${courseId}/day/${prevDay}`}
+                    className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-[var(--color-accent-light)] transition-colors hover:bg-[var(--color-border-light)] hover:text-[var(--color-accent)]"
+                  >
+                    <ArrowLeft size={12} />
+                    Prev
+                  </Link>
+                )}
+                {nextDay && (
+                  <Link
+                    href={`/course/${courseId}/day/${nextDay}`}
+                    className="inline-flex items-center gap-1 rounded-lg bg-[var(--color-accent)] px-2.5 py-1.5 text-xs font-medium text-white transition-all hover:opacity-90"
+                  >
+                    Next
+                    <ArrowRight size={12} />
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
 
-              <h1 className="mt-4 font-[family-name:var(--font-serif)] text-3xl font-bold leading-tight text-[var(--color-accent)] sm:text-4xl">
+          {/* Content area */}
+          <div className="mx-auto max-w-5xl px-8 py-10 xl:px-12">
+            {/* Title section */}
+            <div className="animate-fade-in mb-10">
+              <h1 className="font-[family-name:var(--font-serif)] text-3xl font-bold leading-tight text-[var(--color-accent)] sm:text-4xl lg:text-[2.75rem]">
                 {day.title}
               </h1>
-              <p className="mt-2 text-lg text-[var(--color-accent-light)]">
+              <p className="mt-3 text-lg leading-relaxed text-[var(--color-accent-light)]">
                 {day.concept}
               </p>
             </div>
 
-            {/* Markdown Content */}
-            <div className="animate-fade-in rounded-2xl border border-[var(--color-border-light)] bg-white p-8 shadow-sm sm:p-10">
+            {/* Markdown Content — wide, no cramped card wrapper */}
+            <div className="animate-fade-in course-content">
               <MarkdownRenderer content={day.content} />
             </div>
 
             {/* Completion + Navigation */}
-            <div className="mt-8 flex flex-col gap-6">
+            <div className="mt-16 border-t border-[var(--color-border-light)] pt-8">
               {/* Mark Complete */}
               <div className="flex justify-center">
                 <CompletionButton day={day.day} courseId={courseId} />
               </div>
 
-              {/* Prev / Next */}
-              <div className="flex items-center justify-between">
+              {/* Prev / Next — full-width cards */}
+              <div className="mt-8 grid grid-cols-2 gap-4">
                 {prevDay ? (
                   <Link
                     href={`/course/${courseId}/day/${prevDay}`}
-                    className="inline-flex items-center gap-2 rounded-xl border border-[var(--color-border-light)] bg-white px-5 py-3 text-sm font-medium text-[var(--color-accent-light)] shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md hover:text-[var(--color-accent)]"
+                    className="group flex flex-col rounded-xl border border-[var(--color-border-light)] bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
                   >
-                    <ArrowLeft size={16} />
-                    Day {prevDay}
+                    <span className="flex items-center gap-1.5 text-xs font-medium text-[var(--color-accent-light)]">
+                      <ArrowLeft size={12} />
+                      Previous Lesson
+                    </span>
+                    <span className="mt-1 font-[family-name:var(--font-serif)] text-base font-semibold text-[var(--color-accent)]">
+                      Day {prevDay}
+                    </span>
                   </Link>
                 ) : (
                   <div />
@@ -151,18 +195,23 @@ export default async function DayPage({ params }: DayPageProps) {
                 {nextDay ? (
                   <Link
                     href={`/course/${courseId}/day/${nextDay}`}
-                    className="inline-flex items-center gap-2 rounded-xl bg-[var(--color-accent)] px-5 py-3 text-sm font-medium text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                    className="group flex flex-col items-end rounded-xl bg-[var(--color-accent)] p-5 text-right text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg"
                   >
-                    Day {nextDay}
-                    <ArrowRight size={16} />
+                    <span className="flex items-center gap-1.5 text-xs font-medium text-white/70">
+                      Next Lesson
+                      <ArrowRight size={12} />
+                    </span>
+                    <span className="mt-1 font-[family-name:var(--font-serif)] text-base font-semibold">
+                      Day {nextDay}
+                    </span>
                   </Link>
                 ) : (
                   <div />
                 )}
               </div>
             </div>
-          </article>
-        </div>
+          </div>
+        </article>
       </div>
     </CourseGuard>
   );
