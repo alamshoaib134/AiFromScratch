@@ -1,0 +1,815 @@
+---
+title: "Document Loaders"
+day: 8
+concept: "Extracting clean text and tables from messy files"
+chapter: 2
+chapterTitle: "Data Ingestion and Retrieval"
+---
+
+# Day 8: Document Loaders (PDF, HTML, DOCX, Tables)
+
+> **30-Day RAG Course, Week 2: Data Ingestion and Retrieval**
+> **Date:** Oct 6, 2026 | **Estimated time:** 4 hours
+> **Prerequisites:** [Day 3](./day03_rag_architecture.md) (indexing pipeline), [Day 7](./day07_rag_with_frameworks.md) (frameworks)
+
+## 📌 Cheat Sheet (1-Minute Revision)
+
+| Concept | Remember this |
+|---|---|
+| **Why it matters** | Retrieval can only find what parsing **extracted correctly**. Many "RAG quality" bugs are really **parsing bugs**. |
+| **PDF reality** | A PDF stores **positioned glyphs**, not paragraphs. Columns, tables, headers/footers, and hyphenation must be **reconstructed**. |
+| **Digital vs scanned** | Digital PDF -> text extraction. Scanned PDF (≈ no extractable text) -> **OCR** or a **vision-based parser**. |
+| **PDF tools** | `pypdf` (simple), `pdfplumber` (tables, layout), PyMuPDF/`pymupdf4llm` (fast, Markdown; **AGPL**), Docling / Unstructured / Marker / LlamaParse (layout-aware), cloud OCR. |
+| **HTML** | Remove boilerplate (nav, footer, cookie banners, scripts). Keep **headings** and **tables**. JS-heavy pages need a headless browser. |
+| **DOCX** | Read blocks **in document order**. Heading styles -> **section path** metadata. Tables -> Markdown. |
+| **Tables** | Serialize as **Markdown** (whole table) or **row sentences** ("Product: FD; Rate: 7.1%"). Very large or numeric tables -> **SQL** (Day 24). |
+| **Clean** | Unicode NFKC, de-hyphenate line breaks, strip repeated headers/footers and page numbers, collapse whitespace, dedup. |
+| **Metadata** | `source`, `page`, `section`, `doc_type`, `title`, `effective_date`, `department`, `access_level`, `parser`. |
+| **Verify** | A **fact-survival test**: key facts (for example, "7.9%") must survive parsing; noise ("CONFIDENTIAL", "Accept cookies") must not. |
+
+## 🎯 Learning Objectives
+
+By the end of today, you should be able to:
+
+1. Explain why **ingestion quality sets the ceiling** for RAG quality.
+2. Describe how PDFs store text and why extraction is hard (layout, tables, headers/footers, scans).
+3. Choose a parser for **PDF, HTML, DOCX, PPTX, XLSX/CSV**, and scanned documents.
+4. Extract **tables** and choose a representation (Markdown, row sentences, structured storage).
+5. Build a **cleaning pipeline**: normalization, de-hyphenation, header/footer removal, boilerplate removal.
+6. Capture **structural metadata** (page, section path, doc type) for citations and filtering.
+7. Build a `load_any()` dispatcher with an **ingestion report** and a **fact-survival test**.
+
+## 📅 Suggested Schedule
+
+| Time | Activity |
+|---|---|
+| 0:00 - 0:25 | Section 1-2: Why ingestion matters; the document zoo |
+| 0:25 - 1:05 | Section 3-5: PDF, HTML, DOCX/PPTX in depth |
+| 1:05 - 1:35 | Section 6-9: Tables, OCR, cleaning, metadata |
+| 1:35 - 1:45 | Section 10: Choosing a parser |
+| 1:45 - 3:40 | Section 11: Hands-on labs (all files generated locally) |
+| 3:40 - 4:00 | Exercises and quiz |
+
+## 1. Why Ingestion Matters
+
+> 💡 **Intuition:** Imagine hiring a brilliant analyst and handing them a policy binder that went through a shredder and was taped back together: pages out of order, the rate table read row-by-row as one long line of numbers, "CONFIDENTIAL - Page 3" stamped between every paragraph, and half the words split as "assess- ment". They'd give you bad answers, and it wouldn't be their fault. That is what a naive parser does to your documents before the LLM ever sees them. **Parsing is the first link in the chain**: embeddings can't capture meaning that was scrambled, retrieval can't find facts that were dropped, and the LLM can't cite a table it received as noise. Teams often spend weeks tuning prompts and models when the real fix was a better PDF parser.
+
+### How parsing errors propagate
+
+| Parsing error | Downstream effect |
+|---|---|
+| Table flattened into a line of numbers | "7.1 7.4 1 2 years senior" -> embeddings lose meaning -> wrong rate retrieved or answered |
+| Repeated header/footer in every chunk | Chunks look similar to each other -> noisy retrieval; wasted tokens |
+| Two-column layout read across columns | Sentences from different topics interleaved -> nonsense chunks |
+| Scanned page with no text layer | **Silently empty**: the content is invisible to RAG |
+| Lost headings | No section context -> "The rate is 7.4%" (rate for *what*?) |
+| Broken hyphenation ("assess- ment") | Keyword search (BM25) misses the word; embeddings slightly degraded |
+
+## 2. The Document Zoo
+
+> 💡 **Intuition:** Every file format hides text differently. HTML and DOCX are **structured**: they *know* what a heading, paragraph, or table is, so good parsing is mostly about keeping that structure and throwing away boilerplate. PDFs are **visual**: they only know "draw these characters at these coordinates", so structure must be *guessed* from positions and fonts. Scanned documents are **pictures**: there is no text at all until OCR creates it. Your parsing strategy should match how much structure the format actually preserves.
+
+| Format | Structure preserved? | Main challenges | Typical tools |
+|---|---|---|---|
+| **TXT / Markdown** | Markdown: headings | Encoding (UTF-8 vs cp1252) | Plain Python |
+| **HTML** | ✅ Rich (tags) | Boilerplate, JS-rendered content, nested layouts | BeautifulSoup, trafilatura, markdownify |
+| **DOCX** | ✅ Rich (styles) | Headings via styles, tables, tracked changes, text boxes | python-docx, docx2python, Unstructured |
+| **PPTX** | ⚠️ Partial (slides, shapes) | Text scattered across shapes; meaning is in visuals | python-pptx, Unstructured |
+| **PDF (digital)** | ❌ Visual only | Reading order, columns, tables, headers/footers, hyphenation | pypdf, pdfplumber, PyMuPDF, Docling, Unstructured |
+| **PDF (scanned) / images** | ❌ Pixels | OCR errors, rotated pages, stamps, handwriting | Tesseract, cloud OCR, vision LLMs |
+| **XLSX / CSV** | 🟩 Tabular | Merged cells, multiple sheets, formulas, huge tables | pandas, openpyxl |
+| **Email (EML/MSG)** | ⚠️ Partial | Quoted replies, signatures, attachments | `email` stdlib, extract-msg |
+| **JSON / databases** | 🟩 Structured | Deciding what to embed vs query directly | Custom, Text-to-SQL (Day 24) |
+
+## 3. PDFs in Depth
+
+> 💡 **Intuition:** A PDF is a set of **drawing instructions for a printer**: "put the glyph 'H' at x=72, y=700 in Helvetica 11pt; put 'o' at x=79...". There is no concept of "paragraph", "column", or "table cell". A table is just some text positions plus some lines. Every PDF parser is therefore a **detective** reconstructing reading order and structure from coordinates, font sizes, and gaps. Simple parsers read positions roughly top-to-bottom (fine for single-column text); layout-aware parsers use rules or ML models to detect columns, headings, and tables (much better for reports, but slower).
+
+### 3.1 Common PDF problems
+
+| Problem | Example | Fix |
+|---|---|---|
+| **Headers/footers/page numbers** | "ZyntraCorp - CONFIDENTIAL ... Page 3" on every page | Detect lines repeated across pages and remove them (Lab 2) |
+| **Hyphenation** | "credit assess-\nment" | Join `word-\nword` -> `wordword` (carefully) |
+| **Ligatures / odd Unicode** | "fixed" (U+FB01) instead of "fixed" | Unicode NFKC normalization |
+| **Multi-column** | Reads across both columns line by line | Layout-aware parser (PyMuPDF blocks, Docling, Unstructured) |
+| **Tables** | Cells flattened into lines | `pdfplumber.extract_tables()`, Docling, Camelot, LlamaParse |
+| **Scanned pages** | `extract_text()` returns `""` | Detect (chars per page ≈ 0) -> OCR |
+| **Footnotes, sidebars, captions** | Inserted mid-sentence | Layout-aware parsing, cropping regions |
+| **Encrypted / broken PDFs** | Errors or garbage text | Decrypt if permitted, repair (`qpdf`), or OCR |
+
+### 3.2 PDF tools compared
+
+| Tool | Strengths | Weaknesses | License |
+|---|---|---|---|
+| **pypdf** | Pure Python, simple, reliable for plain text | No tables, limited layout | BSD |
+| **pdfplumber** (pdfminer.six) | Character-level positions, **table extraction**, cropping | Slower on big docs | MIT |
+| **PyMuPDF** / **pymupdf4llm** | Very fast, blocks/fonts, images, **Markdown output** | **AGPL** or commercial ⚠️ | AGPL / Commercial |
+| **Docling** (IBM) | Layout + table-structure ML models, Markdown/JSON output | Heavier (ML models) | MIT |
+| **Unstructured** | Many formats, element types (Title, Table, NarrativeText) | Heavier dependencies; some features in the paid API | Apache-2.0 |
+| **Marker** | High-quality PDF -> Markdown with ML | GPU helps; check the license terms | See repo |
+| **LlamaParse** | Hosted, strong on complex layouts | Cloud service (data leaves your environment) | Commercial |
+| **Cloud OCR/layout** (Azure Document Intelligence, AWS Textract, Google Document AI) | Enterprise-grade OCR, forms, tables | Cost; data residency review | Commercial |
+
+> ⚠️ **Check licenses before production.** For example, PyMuPDF's AGPL license can have obligations for networked services unless you buy a commercial license. Many enterprises restrict AGPL dependencies.
+
+### 3.3 Digital or scanned? A quick check
+
+```python
+chars_per_page = len(page.extract_text().strip())
+if chars_per_page < 50:
+    # probably scanned (or an image-only page) -> OCR
+```
+
+## 4. HTML in Depth
+
+> 💡 **Intuition:** A web page is **mostly not content**. The menu, the footer with 40 links, the cookie banner, the "related articles" sidebar, the chat widget script: on many pages these outweigh the actual article. The good news is that HTML *labels* its structure (`<nav>`, `<main>`, `<h2>`, `<table>`), so the job is **subtraction** (remove boilerplate) plus **preservation** (keep headings as section context and tables as tables). The main trap is JavaScript-rendered pages, where the HTML you download is nearly empty and the content only appears after scripts run.
+
+| Task | How |
+|---|---|
+| **Remove boilerplate** | Drop `script, style, nav, header, footer, aside, form, noscript`, and cookie/banner elements |
+| **Find the main content** | `<main>`, `<article>`, `role="main"`, or tools like **trafilatura** / readability |
+| **Keep structure** | Track `h1-h3` as a **section path**; keep lists and tables |
+| **Tables** | Convert `<table>` -> Markdown (or `pandas.read_html`) |
+| **JS-rendered pages** | Use a headless browser (Playwright) or the site's API/export |
+| **Be a good citizen** | Respect **robots.txt**, terms of service, and rate limits; prefer official exports/APIs |
+
+## 5. DOCX and PPTX
+
+> 💡 **Intuition:** Word documents are the friendliest enterprise format, **if** authors used real heading styles. A heading styled "Heading 2" tells you exactly where a section begins, which is gold for chunking and citations ("Card Policy > Platinum Card > Fees"). The classic mistake is reading paragraphs and tables separately (the default in many snippets), which **loses their order**: the fee table ends up detached from the paragraph that explains it. Read blocks **in document order**.
+
+| Element | python-docx | Notes |
+|---|---|---|
+| **Paragraphs + tables in order** | `doc.iter_inner_content()` | Available in python-docx >= 1.0 |
+| **Heading level** | `paragraph.style.name` -> `"Heading 1"`, `"Heading 2"` | Fake headings (bold text) won't be detected |
+| **Tables** | `table.rows[i].cells[j].text` | Merged cells repeat text across cells |
+| **Headers/footers** | `doc.sections[0].header` | Usually **exclude** them from content |
+| **Tracked changes/comments** | Not exposed simply | Accept all changes before ingesting, or use specialized tools |
+
+**PPTX** (`python-pptx`): iterate `slide.shapes` -> `shape.has_text_frame` / `shape.has_table`; use the **slide title** as the section; include **speaker notes** (often the most explanatory text).
+
+## 6. Tables: The Hardest Part
+
+> 💡 **Intuition:** A table's meaning lives in its **grid**: "7.4%" means nothing until you know it sits in the row *Senior citizens* and the column *Rate*. Flatten a table into a stream of words and that grid is gone. Embeddings see "senior 7.4 1-2 years 7.1 regular", and even a strong LLM may pair the wrong numbers. The fix is to serialize tables in a form that **keeps every value next to its row and column labels**. Which form is best depends on table size and the kinds of questions users ask.
+
+| Representation | Example | Best for | Watch out |
+|---|---|---|---|
+| **Markdown table** (whole table = 1 chunk) | `\| Product \| Rate \|` ... | Small/medium tables; LLMs read Markdown well | Big tables exceed the chunk size; embeddings of number-heavy text are weak |
+| **Row sentences** (1 row = 1 chunk or line) | "Product: FD; Customer: Senior; Tenure: 1-2 yrs; Rate: 7.4%" | Lookup questions ("rate for seniors?") | Loses cross-row comparisons; repeat the table title in each row |
+| **Table summary + Markdown** | "Table: FD rates by customer type and tenure..." + table | Improves retrieval of the table as a whole | Summary generation cost (LLM) |
+| **Structured store (SQL/DataFrame)** | `SELECT rate FROM fd WHERE customer='senior'` | Large, numeric, aggregate queries ("average", "max") | Needs Text-to-SQL or tools (Day 24) |
+| **HTML table** | `<table>...` | Complex merged headers | More tokens |
+
+> 💡 **Rule of thumb:** keep the **table caption/title and column headers with every table chunk**, and never let a chunk boundary cut a table in half (Day 9).
+
+## 7. Scanned Documents, OCR and Vision Parsing
+
+> 💡 **Intuition:** A scanned page is a **photograph of text**. Until OCR (Optical Character Recognition) reads it, your RAG system is literally blind to it, and it fails silently: no error, just missing knowledge. OCR quality depends on the scan (resolution, skew, stamps, handwriting) and on the engine. A newer option is **vision-language models** that "look" at the page image and write Markdown directly, including tables. They're powerful, but slower and costlier, they can **hallucinate** text that isn't there, and you must review where the page images are sent.
+
+| Option | Pros | Cons |
+|---|---|---|
+| **Tesseract** (open source) | Free, local, many languages (incl. Hindi) | Weaker on complex layouts and tables |
+| **Cloud OCR / layout** (Azure DI, Textract, Document AI) | High accuracy, tables, forms, key-value pairs | Cost; data residency and compliance review |
+| **Layout-aware open parsers with OCR** (Docling, Unstructured, Marker) | Structure + OCR in one pipeline | Heavier setup |
+| **Vision LLMs** (GPT-4o-class, Claude, Gemini, Qwen-VL) | Excellent on messy layouts, charts, tables | Cost, latency, possible **hallucinated** text, privacy |
+
+> ✅ **Always flag OCR-derived text** in metadata (`"ocr": true`, `"ocr_confidence": 0.87`). It's useful when answers look wrong.
+
+## 8. Cleaning and Normalization
+
+> 💡 **Intuition:** Cleaning is **laundry, not surgery**. The goal is to remove noise that hurts retrieval (repeated headers, broken hyphens, weird Unicode, runs of whitespace) without changing meaning. Be conservative: every aggressive rule ("delete all lines with numbers") will eventually delete something important ("7.9%"). Clean with explicit, testable rules, and verify with a fact-survival test.
+
+| Step | Why | How |
+|---|---|---|
+| **Unicode normalization (NFKC)** | Ligatures (fi->fi), full-width chars, non-breaking spaces | `unicodedata.normalize("NFKC", t)`. Note it also turns "²" into "2" and "½" into "1/2" |
+| **De-hyphenation** | "assess-\nment" -> "assessment" (careful with real hyphens like "self-\nemployed") | `re.sub(r"(\w+)-\n(\w+)", r"\1\2", t)` |
+| **Header/footer removal** | Noise in every chunk | Remove lines repeated on ≥ 50% of pages (digits masked) |
+| **Page numbers** | Noise | Regex such as `^Page \d+( of \d+)?$` |
+| **Whitespace** | Token waste, inconsistent chunks | Collapse spaces; max 2 consecutive newlines |
+| **Boilerplate (HTML)** | Menus, cookie banners | Tag-based removal (Section 4) |
+| **Deduplication** | The same doc ingested twice; near-duplicate versions | Content hash (exact); MinHash/SimHash (near-duplicates) |
+| **Language detection** | Route to the right embedder/OCR | `langdetect`, fastText LID |
+| **PII handling** | Compliance | Detect and mask/redact before indexing (Day 27) |
+
+## 9. Metadata to Capture at Ingestion
+
+> 💡 **Intuition:** Metadata you don't capture at ingestion is **gone forever**, or very expensive to recover later. The page number enables precise citations ("see page 4"), the section path gives chunks context, the effective date resolves conflicts between policy versions, and the access level keeps confidential content away from the wrong users. Capture generously now; you'll use it for filtering (Day 10), citations (Day 27), and debugging.
+
+| Field | Example | Used for |
+|---|---|---|
+| `source` | `product_guide_2026.pdf` / URL | Citations, re-ingestion |
+| `doc_id` | `PRODUCT-GUIDE-2026` | Delete/update all chunks (Day 6) |
+| `doc_type` | `'pdf'`, `'html'`, `'docx'`, `'xlsx'` | Debugging, routing |
+| `page` / `sheet` / `slide` | `'4'` | Precise citations |
+| `section` (path) | `Card Policy > Platinum Card` | Context, filtering, chunk titles |
+| `title` | `Product Guide 2026` | Display, retrieval boost |
+| `effective_date` / `last_modified` | `2026-01-01` | Freshness filters, conflict resolution |
+| `department`, `product`, `region` | `retail_lending` | Filters |
+| `access_level` / `tenant_id` | `internal` | Security trimming |
+| `parser`, `parser_version`, `ocr` | `pdfplumber 0.11`, `false` | Reproducibility, debugging |
+| `content_hash` | `3f9a...` | Change detection, dedup |
+
+## 10. Choosing a Parser
+
+```text
+Is it HTML/DOCX/PPTX/XLSX (structured)?
+ └─ Yes -> Native libraries (BeautifulSoup/trafilatura, python-docx, python-pptx, pandas).
+           Keep headings and tables.
+Is it a PDF?
+ ├─ Does text extraction return real text? (chars/page > ~50)
+ │   ├─ Simple single-column text          -> pypdf / pdfplumber
+ │   ├─ Tables matter                      -> pdfplumber tables / Docling / Camelot
+ │   └─ Complex layouts (reports, multi-column, mixed tables/figures)
+ │                                          -> Docling / Unstructured / Marker / pymupdf4llm
+ │                                             (check license)
+ └─ No (scanned)                            -> OCR (Tesseract / cloud OCR) or a vision-based
+                                               parser
+Data cannot leave your environment?        -> Prefer local/open-source parsers; review any
+                                               cloud API
+```
+
+> 🎯 **Practical approach:** pick **2-3 candidate parsers**, run them on **10-20 representative documents** (including the ugliest ones), and score them with a **fact-survival test**. Let the evidence decide.
+
+## 11. Hands-On
+
+All sample files are **generated locally** in Lab 0, so no downloads are needed.
+
+### Setup
+
+```bash
+pip install pypdf pdfplumber fpdf2 python-docx beautifulsoup4 pandas openpyxl
+# Optional (Lab 8): Markdown conversion. Note PyMuPDF's AGPL license.
+pip install pymupdf4llm
+```
+
+### Lab 0: Generate realistic sample documents
+
+```python
+from pathlib import Path
+import pandas as pd
+from docx import Document as DocxDocument
+from fpdf import FPDF
+
+OUT = Path("day8_docs")
+OUT.mkdir(exist_ok=True)
+
+# --------- PDF: 2 pages, header/footer, hyphenated line break, a table ---------
+class GuidePDF(FPDF):
+    def header(self):
+        self.set_font("Helvetica", "B", 9)
+        self.cell(0, 8, "ZyntraCorp Bank - Product Guide 2026 - CONFIDENTIAL", align="C")
+        self.ln(12)
+
+    def footer(self):
+        self.set_y(-15)
+        self.set_font("Helvetica", size=8)
+        self.cell(0, 10, f"Page {self.page_no()}", align="C")
+
+pdf = GuidePDF()
+pdf.add_page()
+pdf.set_font("Helvetica", "B", 14)
+pdf.cell(0, 10, "1. Home Loans", new_x="LMARGIN", new_y="NEXT")
+pdf.set_font("Helvetica", size=11)
+pdf.multi_cell(0, 6, "Home loan interest rates start at 7.9% per annum for salaried customers and "
+                     "8.3% for self-employed customers. All loans are subject to credit assess-\n"
+                     "ment by the bank. The maximum tenure is 30 years.")
+pdf.ln(4)
+pdf.multi_cell(0, 6, "Processing fees are 0.5% of the loan amount, capped at 10,000 rupees.")
+
+pdf.add_page()
+pdf.set_font("Helvetica", "B", 14)
+pdf.cell(0, 10, "2. Fixed Deposits", new_x="LMARGIN", new_y="NEXT")
+pdf.set_font("Helvetica", size=11)
+pdf.multi_cell(0, 6, "The table below lists fixed deposit rates by customer type and tenure.")
+pdf.ln(3)
+fd_rows = [("Customer type", "Tenure", "Rate"),
+           ("Regular", "1-2 years", "7.1%"),
+           ("Senior citizen", "1-2 years", "7.4%"),
+           ("Regular", "3-5 years", "6.9%")]
+with pdf.table() as table:
+    for row in fd_rows:
+        r = table.row()
+        for cell in row:
+            r.cell(cell)
+pdf.ln(4)
+pdf.multi_cell(0, 6, "Premature withdrawal attracts a penalty of 1% on the applicable rate.")
+pdf.output(str(OUT / "product_guide_2026.pdf"))
+
+# --------- DOCX: headings, paragraphs, a table (in a meaningful order) ---------
+doc = DocxDocument()
+doc.add_heading("Credit Card Policy 2026", level=1)
+doc.add_heading("Platinum Card", level=2)
+doc.add_paragraph("The Platinum credit card has an annual fee of 2,500 rupees, "
+                  "waived on annual spends above 3 lakh rupees.")
+t = doc.add_table(rows=1, cols=2)
+t.rows[0].cells[0].text, t.rows[0].cells[1].text = "Benefit", "Details"
+for k, v in [("Cashback", "2% on online purchases"), ("Lounge access", "4 visits per year")]:
+    cells = t.add_row().cells
+    cells[0].text, cells[1].text = k, v
+doc.add_heading("Lost or Stolen Cards", level=2)
+doc.add_paragraph("Report a lost card immediately in the mobile app. The card is blocked instantly.")
+doc.save(OUT / "card_policy_2026.docx")
+
+# --------- HTML: real-world boilerplate + main article + table ---------
+(OUT / "savings_page.html").write_text("""<!DOCTYPE html>
+<html><head><title>Savings Plus | ZyntraCorp</title>
+<style>.x{color:red}</style><script>trackUser('abc');</script></head>
+<body>
+<div class="cookie-banner">We use cookies. Accept cookies to continue.</div>
+<header><nav><a href="/">Home</a> | <a href="/loans">Loans</a> | <a href="/cards">Cards</a> | <a href="/login">Login</a></nav></header>
+<main>
+  <h1>Savings Plus Account</h1>
+  <p>The Savings Plus account offers 4.25% annual interest, credited quarterly.</p>
+  <h2>Eligibility</h2>
+  <p>Any resident individual aged 18 or above can open an account. There is no minimum balance requirement.</p>
+  <h2>Charges</h2>
+  <table>
+    <tr><th>Service</th><th>Charge</th></tr>
+    <tr><td>UPI transfers</td><td>Free, unlimited</td></tr>
+    <tr><td>Debit card (first year)</td><td>Free</td></tr>
+    <tr><td>Cheque book (after 25 leaves)</td><td>2 rupees per leaf</td></tr>
+  </table>
+</main>
+<aside>Related: Try our Platinum credit card!</aside>
+<footer>(C) 2026 ZyntraCorp Bank | Privacy | Terms | Careers | Contact</footer>
+</body></html>""", encoding="utf-8")
+
+# --------- XLSX: a rate sheet ---------
+pd.DataFrame({
+    "Product": ["Home loan", "Home loan", "Car loan", "Personal loan"],
+    "Segment": ["Salaried", "Self-employed", "All", "Salaried"],
+    "Rate (%)": [7.9, 8.3, 9.1, 11.5],
+    "Max tenure (years)": [30, 30, 7, 5],
+}).to_excel(OUT / "loan_rates_2026.xlsx", sheet_name="Rates", index=False)
+
+print("Created:", sorted(p.name for p in OUT.iterdir()))
+```
+
+### Lab 1: Naive PDF extraction with pypdf (see the noise)
+
+```python
+from pypdf import PdfReader
+
+reader = PdfReader(OUT / "product_guide_2026.pdf")
+pages = [p.extract_text() or "" for p in reader.pages]
+
+for i, text in enumerate(pages, start=1):
+    print(f"\n----- PAGE {i} ({len(text)} chars) -----\n{text}")
+
+# Scanned-page check: digital pages have plenty of characters
+print("\nLikely scanned pages:", [i for i, t in enumerate(pages, 1) if len(t.strip()) < 50])
+```
+
+📄 **Observe:**
+- The **header** (`"...CONFIDENTIAL"`) and **footer** (`"Page 1"`) appear in the text of **every page**.
+- `"assess-"` / `"ment"` is split across lines.
+- The FD **table** comes out as plain lines of text, so the grid structure is gone.
+
+### Lab 2: Clean it (headers/footers, hyphenation, Unicode, whitespace)
+
+```python
+import re
+import unicodedata
+from collections import Counter
+
+def find_repeated_lines(pages: list[str], min_share: float = 0.5) -> set[str]:
+    """Lines (with digits masked) that appear on at least 'min_share' of pages."""
+    counts = Counter()
+    for text in pages:
+        masked = {re.sub(r"\d+", "#", ln.strip()) for ln in text.splitlines() if ln.strip()}
+        counts.update(masked)
+    threshold = max(2, int(len(pages) * min_share))
+    return {line for line, n in counts.items() if n >= threshold}
+
+def clean_page(text: str, repeated: set[str]) -> str:
+    text = unicodedata.normalize("NFKC", text)                                # ligatures, odd spaces
+    lines = [ln for ln in text.splitlines()
+             if re.sub(r"\d+", "#", ln.strip()) not in repeated]              # drop headers/footers
+    text = "\n".join(lines)
+    text = re.sub(r"(\w+)-\n(\w+)", r"\1\2", text)                           # de-hyphenate line breaks
+    text = re.sub(r"[ \t]+", " ", text)                                       # collapse spaces
+    text = re.sub(r"\n{3,}", "\n\n", text)                                    # max one blank line
+    return text.strip()
+
+repeated = find_repeated_lines(pages)
+print("Repeated lines removed:", repeated)
+clean_pages = [clean_page(t, repeated) for t in pages]
+for i, t in enumerate(clean_pages, 1):
+    print(f"\n===== CLEAN PAGE {i} =====\n{t}")
+
+# NFKC in action (ligature + non-breaking space + full-width digits)
+print(unicodedata.normalize("NFKC", "\ufb01xed\u00a0deposit rate \uff17.\uff14%"))  # -> "fixed deposit rate 7.4%"
+```
+
+📄 **Observe:**
+- The header and "Page #" footer are gone from both pages, **learned from repetition** rather than hard-coded.
+- `"assessment"` is whole again.
+- ⚠️ With only 2 pages, "repeated on ≥ 50% of pages" is a weak signal. On real 50-page documents it's much more reliable, but **always print what you're removing**.
+
+### Lab 3: Extract PDF tables with pdfplumber -> Markdown
+
+```python
+import pdfplumber
+
+def rows_to_markdown(rows: list[list]) -> str:
+    rows = [[(c or "").strip().replace("\n", " ") for c in r] for r in rows if r and any(r)]
+    if not rows:
+        return ""
+    header, *body = rows
+    lines = ["| " + " | ".join(header) + " |", "| " + " | ".join(["---" for _ in header]) + " |"]
+    lines += ["| " + " | ".join(r) + " |" for r in body]
+    return "\n".join(lines)
+
+def rows_to_sentences(rows: list[list], title: str = "") -> list[str]:
+    header, *body = [[(c or "").strip() for c in r] for r in rows]
+    prefix = f"{title}: " if title else ""
+    return [prefix + "; ".join(f"{h}: {v}" for h, v in zip(header, r)) for r in body]
+
+with pdfplumber.open(OUT / "product_guide_2026.pdf") as pdf:
+    for page_no, page in enumerate(pdf.pages, start=1):
+        for table in page.extract_tables():
+            print(f"\nTable found on page {page_no}:\n")
+            print(rows_to_markdown(table))
+            print("\nAs row sentences:")
+            for s in rows_to_sentences(table, title="Fixed deposit rates"):
+                print(" -", s)
+```
+
+📄 **Observe:**
+- `pdfplumber` recovers the **grid** (it uses the drawn cell borders). The Markdown keeps every rate next to its customer type and tenure.
+- Row sentences such as *"Fixed deposit rates: Customer type: Senior citizen; Tenure: 1-2 years; Rate: 7.4%"* are **self-contained**: perfect for lookup questions.
+- Tables **without** borders are much harder. That's where Docling, Camelot (stream mode), or vision parsers help.
+
+### Lab 4: HTML, naive vs clean + section-aware
+
+```python
+from bs4 import BeautifulSoup
+
+html = (OUT / "savings_page.html").read_text(encoding="utf-8")
+
+# Naive: everything, including boilerplate
+naive = BeautifulSoup(html, "html.parser").get_text(" ", strip=True)
+print("NAIVE:", naive[:300], "...\n")
+
+# Clean: remove boilerplate, keep structure
+soup = BeautifulSoup(html, "html.parser")
+for tag in soup(["script", "style", "nav", "header", "footer", "aside", "form", "noscript"]):
+    tag.decompose()
+for tag in soup.select('[class*="cookie"], [id*="cookie"]'):
+    tag.decompose()
+main = soup.find("main") or soup.body
+
+sections, path, buffer = [], [], []
+
+def flush():
+    if buffer:
+        sections.append({"section": " > ".join(path), "text": "\n".join(buffer)})
+        buffer.clear()
+
+for el in main.find_all(["h1", "h2", "h3", "p", "li", "table"]):
+    if el.name in ("h1", "h2", "h3"):
+        flush()
+        level = int(el.name[1])
+        path = path[: level - 1] + [el.get_text(strip=True)]
+    elif el.name == "table":
+        rows = [[c.get_text(" ", strip=True) for c in tr.find_all(["th", "td"])] for tr in el.find_all("tr")]
+        buffer.append(rows_to_markdown(rows))
+    elif not el.find_parent("table"):
+        buffer.append(el.get_text(" ", strip=True))
+flush()
+
+title = soup.title.get_text(strip=True) if soup.title else ""
+for s in sections:
+    print(f"[{title} | {s['section']}]\n{s['text']}\n")
+```
+
+📄 **Observe:**
+- The naive text starts with **"We use cookies... Home | Loans | Cards | Login"**, which would pollute every chunk from this page.
+- The clean version keeps only the real content, grouped into **sections** such as `Savings Plus Account > Charges`, with the table intact as Markdown.
+- The section path becomes great **metadata** and a great **chunk prefix** (Day 9).
+
+### Lab 5: DOCX in document order, with a heading path
+
+```python
+from docx.table import Table
+from docx.text.paragraph import Paragraph
+
+docx_file = DocxDocument(OUT / "card_policy_2026.docx")
+
+# ❌ The common mistake: paragraphs and tables read separately, so their order is lost
+print("Paragraphs only:", [p.text for p in docx_file.paragraphs if p.text][:4], "...")
+print("Tables only     :", [[c.text for c in r.cells] for r in docx_file.tables[0].rows], "\n")
+
+# ✅ Correct: iterate blocks in document order and track headings
+sections, path, buffer = [], [], []
+
+def flush_docx():
+    if buffer:
+        sections.append({"section": " > ".join(path), "text": "\n".join(buffer)})
+        buffer.clear()
+
+for block in docx_file.iter_inner_content():                                   # python-docx >= 1.0
+    if isinstance(block, Paragraph):
+        style = block.style.name if block.style is not None else ""
+        if style.startswith("Heading") and style.split()[-1].isdigit():
+            flush_docx()
+            level = int(style.split()[-1])
+            path = path[: level - 1] + [block.text.strip()]
+        elif block.text.strip():
+            buffer.append(block.text.strip())
+    elif isinstance(block, Table):
+        buffer.append(rows_to_markdown([[c.text for c in row.cells] for row in block.rows]))
+flush_docx()
+
+for s in sections:
+    print(f"[{s['section']}]\n{s['text']}\n")
+```
+
+📄 **Observe:** The benefits table stays **inside** the "Platinum Card" section, right after the paragraph it belongs to. The section path *"Credit Card Policy 2026 > Platinum Card"* tells the retriever and the LLM what "annual fee" refers to.
+
+### Lab 6: Spreadsheets, rows as sentences vs Markdown
+
+```python
+xlsx = pd.read_excel(OUT / "loan_rates_2026.xlsx", sheet_name=None)            # dict of DataFrames (all sheets)
+
+for sheet, df in xlsx.items():
+    rows = [list(df.columns)] + df.astype(str).values.tolist()
+    print(f"--- Sheet '{sheet}' as Markdown (1 chunk) ---")
+    print(rows_to_markdown(rows))
+    print(f"\n--- Sheet '{sheet}' as row sentences (1 chunk per row) ---")
+    for s in rows_to_sentences(rows, title=f"Loan rates 2026 ({sheet})"):
+        print(" -", s)
+```
+
+📄 **Observe:**
+- **Markdown** suits "compare all loan rates" questions.
+- **Row sentences** suit "what's the car loan rate?" lookups: each row carries its own context.
+- For "which product has the highest rate?" or "average tenure", **neither** is ideal. Route those to SQL/pandas (Day 24).
+
+### Lab 7: `load_any()` dispatcher + ingestion report + fact-survival test
+
+```python
+import hashlib
+from dataclasses import dataclass, field
+
+@dataclass
+class Doc:
+    text: str
+    metadata: dict = field(default_factory=dict)
+
+def _meta(path: Path, doc_type: str, parser: str, **extra) -> dict:
+    return {"source": path.name, "doc_type": doc_type, "parser": parser, **extra}
+
+def load_pdf(path: Path) -> list[Doc]:
+    raw_pages, tables_per_page = [], []
+    with pdfplumber.open(path) as pdf:
+        for page in pdf.pages:
+            tables = page.find_tables()
+            bboxes = [t.bbox for t in tables]
+
+            def outside_tables(obj, bboxes=bboxes):
+                # keep only characters that are NOT inside a detected table (avoids duplicating table text)
+                return not any(x0 <= obj.get("x0", -1) and obj.get("x1", -1) <= x1 and
+                               top <= obj.get("top", -1) and obj.get("bottom", -1) <= bottom
+                               for x0, top, x1, bottom in bboxes)
+
+            raw_pages.append(page.filter(outside_tables).extract_text() or "")
+            tables_per_page.append([t.extract() for t in tables])
+    repeated = find_repeated_lines(raw_pages)
+    docs = []
+    for i, (raw, tables) in enumerate(zip(raw_pages, tables_per_page), start=1):
+        text = clean_page(raw, repeated)
+        for tbl in tables:                                                     # append tables as Markdown
+            text += "\n\n" + rows_to_markdown(tbl)
+        docs.append(Doc(text, _meta(path, "pdf", "pdfplumber", page=i,
+                                    ocr_needed=len(raw.strip()) < 50 and not tables)))
+    return docs
+
+def load_html(path: Path) -> list[Doc]:
+    soup = BeautifulSoup(path.read_text(encoding="utf-8"), "html.parser")
+    title = soup.title.get_text(strip=True) if soup.title else path.stem
+    for tag in soup(["script", "style", "nav", "header", "footer", "aside", "form",
+                     "noscript"]):
+        tag.decompose()
+    for tag in soup.select('[class*="cookie"], [id*="cookie"]'):
+        tag.decompose()
+    main = soup.find("main") or soup.body
+    out, path_, buf = [], [], []
+
+    def flush():
+        if buf:
+            out.append(Doc("\n".join(buf), _meta(path, "html", "bs4", title=title,
+                                                 section=" > ".join(path_))))
+            buf.clear()
+
+    for el in main.find_all(["h1", "h2", "h3", "p", "li", "table"]):
+        if el.name in ("h1", "h2", "h3"):
+            flush()
+            path_ = path_[: int(el.name[1]) - 1] + [el.get_text(strip=True)]
+        elif el.name == "table":
+            buf.append(rows_to_markdown([[c.get_text(" ", strip=True) for c in tr.find_all(["th", "td"])]
+                                         for tr in el.find_all("tr")]))
+        elif not el.find_parent("table"):
+            buf.append(el.get_text(" ", strip=True))
+    flush()
+    return out
+
+def load_docx(path: Path) -> list[Doc]:
+    d = DocxDocument(path)
+    out, path_, buf = [], [], []
+
+    def flush():
+        if buf:
+            out.append(Doc("\n".join(buf), _meta(path, "docx", "python-docx", section=" > ".join(path_))))
+            buf.clear()
+
+    for block in d.iter_inner_content():
+        if isinstance(block, Paragraph):
+            style = block.style.name if block.style is not None else ""
+            if style.startswith("Heading") and style.split()[-1].isdigit():
+                flush()
+                path_ = path_[: int(style.split()[-1]) - 1] + [block.text.strip()]
+            elif block.text.strip():
+                buf.append(block.text.strip())
+        elif isinstance(block, Table):
+            buf.append(rows_to_markdown([[c.text for c in r.cells] for r in block.rows]))
+    flush()
+    return out
+
+def load_xlsx(path: Path) -> list[Doc]:
+    out = []
+    for sheet, df in pd.read_excel(path, sheet_name=None).items():
+        rows = [list(df.columns)] + df.astype(str).values.tolist()
+        out.append(Doc(rows_to_markdown(rows), _meta(path, "xlsx", "pandas", sheet=sheet)))
+    return out
+
+LOADERS = {".pdf": load_pdf, ".html": load_html, ".htm": load_html,
+           ".docx": load_docx, ".xlsx": load_xlsx,
+           ".txt": lambda p: [Doc(p.read_text(encoding="utf-8"), _meta(p, "txt", "plain"))]}
+
+def load_any(path: Path) -> list[Doc]:
+    loader = LOADERS.get(path.suffix.lower())
+    if loader is None:
+        raise ValueError(f"No loader for {path.suffix}")
+    docs = loader(path)
+    for d in docs:
+        d.metadata["content_hash"] = hashlib.sha256(d.text.encode("utf-8")).hexdigest()[:16]
+    return docs
+
+# ---------- Ingest everything + report ----------
+all_docs = []
+print(f"{'file':<28} {'type':<5} {'units':>5} {'chars':>6} flags")
+for p in sorted(OUT.iterdir()):
+    docs = load_any(p)
+    all_docs.extend(docs)
+    flags = "OCR NEEDED" if any(d.metadata.get("ocr_needed") for d in docs) else ""
+    print(f"{p.name:<28} {docs[0].metadata['doc_type']:<5} {len(docs):>5} {sum(len(d.text) for d in docs):>6} {flags}")
+
+# ---------- Fact-survival test ----------
+EXPECTED = {
+    "product_guide_2026.pdf": ["7.9%", "8.3%", "assessment", "7.4%", "Senior citizen", "10,000 rupees"],
+    "card_policy_2026.docx": ["2,500 rupees", "Lounge access", "blocked instantly"],
+    "savings_page.html": ["4.25%", "no minimum balance", "2 rupees per leaf"],
+    "loan_rates_2026.xlsx": ["Car loan", "9.1", "11.5"],
+}
+FORBIDDEN = ["CONFIDENTIAL", "Accept cookies", "Page 1", "Careers", "trackUser", "Platinum credit card!"]
+
+text_by_source = {}
+for d in all_docs:
+    text_by_source[d.metadata["source"]] = text_by_source.get(d.metadata["source"], "") + "\n" + d.text
+
+print("\nFact-survival test:")
+for src, facts in EXPECTED.items():
+    missing = [f for f in facts if f not in text_by_source.get(src, "")]
+    noise = [f for f in FORBIDDEN if f in text_by_source.get(src, "")]
+    status = "PASS" if not missing and not noise else "FAIL"
+    print(f"{status} {src:<26} missing={missing} noise={noise}")
+
+print(f"\nExample metadata:\n{all_docs[-1].metadata}")
+```
+
+📄 **Observe:**
+- Every file becomes a list of `Doc(text, metadata)` with **`page/section/sheet` metadata**, ready for chunking (Day 9) and for any framework: `langchain_core.documents.Document(page_content=d.text, metadata=d.metadata)`.
+- `load_pdf` removes characters inside detected table areas **before** extracting text, so each table appears **once** (as Markdown), not twice (flattened lines + Markdown). Print `all_docs[1].text` to check.
+- ⚠️ **Simplification:** tables are appended at the end of the page, so on page 2 the table now follows the "Premature withdrawal..." sentence rather than sitting where it appears in the PDF. Exercise 8 fixes this.
+- The **fact-survival test** turns "the parsing looks OK" into a **repeatable check**. Add it to CI whenever you change parsers.
+
+### Lab 8 (Optional): PDF -> Markdown with pymupdf4llm, and OCR
+
+```python
+import pymupdf4llm     # AGPL-licensed PyMuPDF underneath; check before production use
+
+md = pymupdf4llm.to_markdown(str(OUT / "product_guide_2026.pdf"))
+print(md[:1500])
+```
+
+📄 **Observe:**
+- Headings become `#` Markdown and the FD table becomes a clean Markdown table **automatically**, with no table code needed.
+- ❌ But the **"...CONFIDENTIAL" header and "Page N" footer survive**, and "assess-/ment" comes out broken as "assess ment".
+- 💡 **Lesson:** even good converters need **your cleaning step** (Lab 2) and your **fact-survival test** (Lab 7). Run the test on the pymupdf4llm output: which facts or noise checks fail?
+
+**OCR sketch (requires the Tesseract binary installed on your OS):**
+
+```python
+# pip install pytesseract pymupdf pillow     (and install Tesseract itself)
+import io
+import pymupdf
+import pytesseract
+from PIL import Image
+
+pdf_doc = pymupdf.open(OUT / "product_guide_2026.pdf")
+for page in pdf_doc:
+    pix = page.get_pixmap(dpi=300)                                            # render the page as an image
+    img = Image.open(io.BytesIO(pix.tobytes("png")))
+    text = pytesseract.image_to_string(img, lang="eng")                        # e.g., lang="eng+hin" for Hindi
+    print(f"--- OCR page {page.number + 1} ---\n{text[:300]}")
+```
+
+> Other layout-aware options to try on your own documents: **Docling** (`pip install docling`; `DocumentConverter().convert(path).document.export_to_markdown()`) and **Unstructured** (`partition_pdf`, `partition_html`, ...). Both are heavier installs.
+
+## ❓ Common Confusions
+
+| ❌ Misconception | ✅ Reality |
+|---|---|
+| "PDF text extraction is a solved problem." | Digital single-column text is easy. Columns, tables, headers/footers, and scans are **not**. Test on your ugliest documents. |
+| "If no error was raised, the document was ingested." | Scanned pages return **empty text silently**. Check characters per page and flag OCR needs. |
+| "A better LLM will fix messy parsed text." | Retrieval happens **before** the LLM. Scrambled chunks are never retrieved, or they mislead. |
+| "`soup.get_text()` is enough for web pages." | It includes menus, cookie banners, footers, and scripts' leftovers. Remove boilerplate and keep structure. |
+| "Tables can be chunked like prose." | Flattening destroys the row/column context. Use Markdown, row sentences, or SQL. |
+| "Aggressive cleaning is safer." | Over-cleaning deletes facts (for example, rules that drop lines with numbers). Clean conservatively and verify with a fact-survival test. |
+| "Any open-source parser is free to use commercially." | Licenses differ (MIT/BSD vs **AGPL/GPL**). Check before shipping. |
+
+## 🏋️ Exercises
+
+1. **Your ugliest PDF:** Take a real multi-column or table-heavy PDF (for example, a public bank annual report). Compare `pypdf`, `pdfplumber`, and `pymupdf4llm` (or Docling) with a 10-fact survival test. Which parser wins?
+2. **Header/footer robustness:** Modify `find_repeated_lines` so it also catches "Page 3 of 12" and date stamps. Make sure it does **not** remove a real sentence that repeats (for example, a disclaimer you want to keep once).
+3. **Real hyphens:** Improve de-hyphenation so "self-\nemployed" stays hyphenated (hint: check whether the joined word exists in a vocabulary, or keep the hyphen when both parts are common words).
+4. **PPTX loader:** Add `load_pptx()` using `python-pptx`: the slide title as the section, text from all shapes, tables as Markdown, and speaker notes appended.
+5. **Scanned detection:** Create a PDF that contains only an image of text (for example, a screenshot). Confirm your report flags `OCR NEEDED`. Then OCR it with Tesseract and re-run the fact test.
+6. **Table strategy experiment:** Index the FD table three ways (Markdown, row sentences, both) with your Day 7 pipeline. Ask 5 lookup and 3 comparison questions. Which representation retrieves best?
+7. **Plug into Day 7:** Convert `all_docs` into LangChain `Document`s, split, index into Chroma, and ask: "What is the FD rate for senior citizens?" and "Is there a charge for cheque books?"
+8. **Keep tables in reading order:** Improve `load_pdf` so each Markdown table is inserted **where it appears on the page** (hint: pdfplumber's `extract_words()` gives each word's `top` coordinate; compare it with each table's `bbox` top to split the page text into "above" and "below" the table).
+
+## 🏁 Quiz (Self-Check)
+
+1. Why can't a PDF parser simply "read the paragraphs"?
+2. How can you detect that a PDF page is probably scanned?
+3. What does Unicode NFKC normalization fix, and what can it change unexpectedly?
+4. Describe an algorithm to remove headers and footers without hard-coding them.
+5. Why should DOCX paragraphs and tables be read **in document order**?
+6. Name two table representations and when each is best.
+7. What's the main risk of using a vision LLM to parse documents?
+8. Name five metadata fields to capture at ingestion, and why.
+9. What is a **fact-survival test**?
+10. Why does the license of a parsing library matter?
+
+<details>
+<summary>✅ Answers</summary>
+
+1. PDFs store **glyphs at coordinates**, not paragraphs or tables. Structure and reading order must be reconstructed from positions and fonts.
+2. Text extraction returns (almost) nothing, for example **< ~50 characters per page**, even though the page visibly has text.
+3. It fixes **ligatures, full-width characters, and non-breaking spaces**. It can also change superscripts ("²" -> "2") and fractions ("½" -> "1/2").
+4. Mask digits, count how many pages each line appears on, and remove lines appearing on $\ge 50\%$ of pages (then print what was removed).
+5. Otherwise tables get detached from the headings and paragraphs that explain them, which loses context ("which fee is this?").
+6. **Markdown** (whole table) for small tables and comparisons; **row sentences** for lookups; (also) **SQL** for large/numeric/aggregate queries.
+7. It can **hallucinate** text that isn't on the page; it's also costly and slow, and raises privacy/data-residency questions.
+8. For example: `source` (citations), `page` (precise citations), `section` (context/filters), `effective_date` (freshness/conflicts), `access_level` (security), `doc_id` (updates/deletes), `parser`/`ocr` (debugging).
+9. A test listing **key facts that must appear** (and **noise that must not appear**) in the parsed output of each document, run whenever parsing changes.
+10. Some licenses (for example, **AGPL/GPL**) impose obligations that may conflict with company policy or proprietary/networked use.
+
+</details>
+
+## 🔗 Resources
+
+### Libraries and docs
+
+- pypdf: https://pypdf.readthedocs.io/
+- pdfplumber: https://github.com/jsvine/pdfplumber
+- PyMuPDF and pymupdf4llm: https://pymupdf.readthedocs.io/ (see its license page)
+- Docling (IBM): https://github.com/docling-project/docling
+- Unstructured: https://docs.unstructured.io/
+- Marker: https://github.com/datalab-to/marker
+- python-docx: https://python-docx.readthedocs.io/
+- python-pptx: https://python-pptx.readthedocs.io/
+- Beautiful Soup: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+- trafilatura (main-content extraction): https://trafilatura.readthedocs.io/
+- Tesseract OCR: https://github.com/tesseract-ocr/tesseract
+- fpdf2 (used to generate the lab PDF): https://py-pdf.github.io/fpdf2/
+
+### Papers and reading
+
+- *Docling Technical Report* (Auer et al., 2024): https://arxiv.org/abs/2408.09869
+- Unicode Normalization Forms (UAX #15): https://unicode.org/reports/tr15/
+
+## 🌸 Key Takeaways
+
+- **Ingestion sets the ceiling.** Parsing errors silently become retrieval and answer errors.
+- Match the parser to the format: **structured formats -> keep structure; PDFs -> reconstruct structure; scans -> OCR/vision**.
+- **Tables need special care.** Keep values with their row/column labels (Markdown, row sentences), or send them to SQL.
+- **Clean conservatively:** NFKC, de-hyphenation, repeated header/footer removal, boilerplate removal, dedup.
+- **Capture metadata now** (source, page, section, dates, access level, parser); it powers citations, filters, and debugging.
+- **Measure parsing quality** with a fact-survival test on representative (and ugly!) documents, and check **licenses**.
+
+## 🗂️ Next: Day 9: Chunking Strategies (Fixed, Recursive, Semantic)
+
+You'll turn today's clean, section-aware `Doc` objects into high-quality chunks, and measure how chunking changes retrieval.
