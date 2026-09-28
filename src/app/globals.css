@@ -323,6 +323,28 @@ body {
   padding-right: 1.25rem;
 }
 
+/* KaTeX math rendering */
+.prose .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0;
+  margin: 1.5rem 0;
+}
+
+.prose .katex {
+  font-size: 1.1em;
+}
+
+.prose .katex-display > .katex {
+  font-size: 1.2em;
+}
+
+/* Inline math in tables should not be too large */
+.prose td .katex,
+.prose th .katex {
+  font-size: 1em;
+}
+
 /* ─── Selection ─── */
 ::selection {
   background: var(--color-accent);
