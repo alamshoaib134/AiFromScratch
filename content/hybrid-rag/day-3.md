@@ -1,3 +1,11 @@
+---
+title: "RAG Architecture"
+day: 3
+concept: "The end-to-end blueprint: indexing, retrieval, and generation"
+chapter: 1
+chapterTitle: "Foundations"
+---
+
 # Day 3: RAG Architecture (Retriever, Generator, Pipeline Flow)
 
 > **30-Day RAG Course, Week 1: Foundations**

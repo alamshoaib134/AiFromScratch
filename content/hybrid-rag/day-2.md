@@ -1,3 +1,11 @@
+---
+title: "Hallucinations & RAG"
+day: 2
+concept: "Grounding fluent guesses with verifiable external truth"
+chapter: 1
+chapterTitle: "Foundations"
+---
+
 # Day 2: Why LLMs Hallucinate and How RAG Helps
 
 > **30-Day RAG Course, Week 1: Foundations**  

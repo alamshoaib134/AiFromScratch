@@ -1,3 +1,11 @@
+---
+title: "Text Embeddings"
+day: 4
+concept: "Translating human meaning into mathematical coordinates"
+chapter: 1
+chapterTitle: "Foundations"
+---
+
 # Day 4: Text Embeddings (Concepts and Models)
 
 > **30-Day RAG Course, Week 1: Foundations**  

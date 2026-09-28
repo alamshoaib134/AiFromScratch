@@ -1,3 +1,11 @@
+---
+title: "LLM Basics"
+day: 1
+concept: "The engine under the hood: tokens, context windows, and prompts"
+chapter: 1
+chapterTitle: "Foundations"
+---
+
 # Day 1: LLM Basics (Tokens, Context Window, Prompting)
 
 > **30-Day RAG Course, Week 1: Foundations**

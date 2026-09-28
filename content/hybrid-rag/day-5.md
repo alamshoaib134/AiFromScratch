@@ -1,3 +1,11 @@
+---
+title: "Similarity Metrics"
+day: 5
+concept: "The geometry of relevance: Cosine, Dot Product, and Euclidean"
+chapter: 1
+chapterTitle: "Foundations"
+---
+
 # Day 5: Similarity Metrics (Cosine, Dot Product, Euclidean)
 
 > **30-Day RAG Course, Week 1: Foundations**
