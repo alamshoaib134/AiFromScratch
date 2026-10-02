@@ -148,7 +148,7 @@ export default function HomepageClient({
               </h2>
               <div className="flex flex-col">
                 <img 
-                  src="https://github.com/alamshoaib134.png" 
+                  src="https://avatars.githubusercontent.com/u/52914419?v=4" 
                   alt="Shoaib Alam"
                   className="w-full h-auto grayscale border border-[var(--color-border)] mb-4"
                 />
