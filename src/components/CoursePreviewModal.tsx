@@ -93,15 +93,36 @@ export default function CoursePreviewModal({
               <ArrowRight size={20} />
             </a>
           ) : (
-            <a
-              href={`https://wa.me/+919131814918?text=${encodeURIComponent(`Hi! I would like to get the passcode to unlock the "${course.title}" course.`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex w-full items-center justify-between border-2 border-[var(--color-border)] bg-[var(--color-ink)] px-6 py-4 text-base font-medium text-[var(--color-surface)] transition-colors hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)]"
-            >
-              Chat with Author for Passcode
-              <ArrowRight size={20} />
-            </a>
+            <div className="flex flex-col gap-4">
+              <button
+                onClick={onUnlock}
+                className="flex w-full items-center justify-between border-2 border-[var(--color-border)] bg-[var(--color-ink)] px-6 py-4 text-base font-medium text-[var(--color-surface)] transition-colors hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)]"
+              >
+                Unlock Full Course
+                <ArrowRight size={20} />
+              </button>
+              
+              <div className="flex flex-col items-center text-sm text-[var(--color-ink)] pt-4 border-t border-[var(--color-border)] mt-2 gap-3">
+                <div className="flex flex-col items-center">
+                  <span className="mb-1 text-[var(--color-muted)]">Don't have a code?</span>
+                  <a
+                    href={`upi://pay?pa=alamshoaib134@oksbi&pn=AI%20Academy&am=${course.discountPrice}&cu=INR`}
+                    className="font-medium text-[var(--color-ink)] hover:text-[var(--color-accent)] underline underline-offset-4"
+                  >
+                    Click here to pay ₹{course.discountPrice} via UPI (alamshoaib134@oksbi)
+                  </a>
+                </div>
+                <a
+                  href={`https://wa.me/+919131814918?text=${encodeURIComponent(`Hi! I just paid ₹${course.discountPrice} for the "${course.title}" course. Here is my payment screenshot, please send the passcode.`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 font-medium text-[var(--color-accent)] hover:underline"
+                >
+                  Send payment screenshot to author to get the code
+                  <ArrowRight size={14} />
+                </a>
+              </div>
+            </div>
           )}
         </div>
       </div>
