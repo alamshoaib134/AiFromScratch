@@ -93,13 +93,15 @@ export default function CoursePreviewModal({
               <ArrowRight size={20} />
             </a>
           ) : (
-            <button
-              onClick={onUnlock}
+            <a
+              href={`https://wa.me/+919131814918?text=${encodeURIComponent(`Hi! I would like to get the passcode to unlock the "${course.title}" course.`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex w-full items-center justify-between border-2 border-[var(--color-border)] bg-[var(--color-ink)] px-6 py-4 text-base font-medium text-[var(--color-surface)] transition-colors hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)]"
             >
-              Unlock Full Course
+              Chat with Author for Passcode
               <ArrowRight size={20} />
-            </button>
+            </a>
           )}
         </div>
       </div>
