@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { courses } from '@/lib/courses';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://aiacademy.com'; // Adjust to actual production URL
+  const baseUrl = 'https://aieveryday.vercel.app';
   
   const courseUrls = courses
     .filter(course => course.status === 'available')

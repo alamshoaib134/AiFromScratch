@@ -18,10 +18,57 @@ const ibmPlexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "AI Academy | Master AI from Scratch",
+  metadataBase: new URL("https://aieveryday.vercel.app"),
+  title: {
+    default:
+      "AI Academy — Learn AI for Beginners | Daily Research & Practical Guides",
+    template: "%s | AI Academy",
+  },
   description:
-    "A curated collection of courses designed to take you from AI fundamentals to advanced systems. Master Artificial Intelligence with comprehensive lessons and hands-on projects.",
-  keywords: ["AI", "artificial intelligence", "machine learning", "course", "academy"],
+    "Free educational platform to learn artificial intelligence from scratch. Explore beginner-friendly AI tutorials, step-by-step guides, and daily simplified research papers.",
+  keywords: [
+    "learn AI",
+    "artificial intelligence for beginners",
+    "AI tutorials",
+    "machine learning course",
+    "AI research papers",
+    "beginner AI guide",
+    "learn machine learning",
+    "AI academy",
+  ],
+  authors: [{ name: "Shoaib Alam", url: "https://shoaibalam.vercel.app/" }],
+  creator: "Shoaib Alam",
+  publisher: "AI Academy",
+  alternates: {
+    canonical: "https://aieveryday.vercel.app/",
+  },
+  openGraph: {
+    title:
+      "AI Academy — Learn AI for Beginners | Daily Research & Practical Guides",
+    description:
+      "Free educational platform to learn artificial intelligence from scratch. Explore beginner-friendly AI tutorials, step-by-step guides, and daily simplified research papers.",
+    url: "https://aieveryday.vercel.app/",
+    siteName: "AI Academy",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AI Academy — Learn AI for Beginners",
+    description:
+      "Free educational platform to learn AI from scratch. Beginner-friendly tutorials, step-by-step guides, and daily simplified research papers.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -44,7 +91,7 @@ export default function RootLayout({
                 © {new Date().getFullYear()} AI Academy
               </p>
               <p className="font-[family-name:var(--font-serif)] text-xl text-[var(--color-muted)]">
-                The only way to learn AI is to build with AI.
+                Demystifying AI — one lesson, one paper, one day at a time.
               </p>
             </div>
           </div>

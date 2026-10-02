@@ -19,10 +19,10 @@ export interface Course {
 export const courses: Course[] = [
   {
     id: "30-days-of-ai",
-    title: "30 Days of AI Challenge",
+    title: "Learn AI for Beginners — 30-Day Guide",
     subtitle: "AI From Scratch",
     description:
-      "The ultimate 30-day guide to the vocabulary, mechanics, and future of Artificial Intelligence. From NLP fundamentals to AGI — no programming required.",
+      "A beginner-friendly, step-by-step 30-day guide to understanding Artificial Intelligence. From NLP fundamentals to AGI — explained in plain language, no programming required.",
     status: "available",
     badge: "Active",
     iconName: "Brain",

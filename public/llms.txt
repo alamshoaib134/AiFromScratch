@@ -1,0 +1,28 @@
+# AI Academy
+
+> AI Academy is a free, beginner-friendly educational sharing platform designed to help anyone learn artificial intelligence through clear, step-by-step guides and daily paper breakdowns.
+
+## Core Learning Paths
+- [Learn AI for Beginners](/): Foundational concepts, hands-on tutorials, and practical guides explained in plain language.
+- [Daily Research Papers](/papers): Daily simplified breakdowns of landmark and emerging AI research papers.
+
+## Key Features
+- Step-by-step guides without complex math barriers
+- Interactive, project-based AI learning
+- Daily curated research paper summaries for curious builders
+
+## Available Courses
+- [30 Days of AI Challenge](/course/30-days-of-ai): The ultimate 30-day guide to the vocabulary, mechanics, and future of Artificial Intelligence. From NLP fundamentals to AGI — no programming required. 4 chapters, 30 lessons.
+- [Hybrid RAG Systems](/course/hybrid-rag): Master retrieval-augmented generation with hybrid search, re-ranking, multi-hop reasoning, and production-grade RAG pipelines. 4 chapters, 30 lessons.
+
+## Upcoming Courses
+- Agentic AI & Multi-Agent Workflows: Build autonomous AI agents that plan, reason, and collaborate.
+- Fine-Tuning & LLMOps: Learn to fine-tune foundation models and deploy custom LLMs at scale.
+- Multimodal AI & Computer Vision: Explore image generation, video understanding, and spatial intelligence.
+
+## About
+AI Academy is created by Shoaib Alam, an AI Engineer at JPMC and NLP Researcher at IIT Gandhinagar, published at EMNLP 2024 (LEGOBench). The platform bridges cutting-edge AI research with accessible, beginner-friendly education.
+
+## Contact
+- Website: https://aieveryday.vercel.app
+- Portfolio: https://shoaibalam.vercel.app/
