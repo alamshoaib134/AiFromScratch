@@ -3,11 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Brain,
   List,
   X,
-  GearSix,
-  Newspaper,
 } from "@phosphor-icons/react";
 import { useState } from "react";
 
@@ -18,23 +15,17 @@ export default function Navbar() {
   const isAdmin = pathname.startsWith("/admin");
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--color-border-light)] bg-[var(--color-alabaster)]/95 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b-2 border-[var(--color-border)] bg-[var(--color-canvas)]">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-3 transition-opacity hover:opacity-70"
+          className="flex items-center gap-2 transition-opacity hover:opacity-70"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-accent)] text-white">
-            <Brain size={22} weight="duotone" />
-          </div>
           <div>
-            <h1 className="font-[family-name:var(--font-serif)] text-lg font-bold tracking-tight text-[var(--color-accent)]">
+            <h1 className="font-[family-name:var(--font-serif)] text-2xl font-bold tracking-tight text-[var(--color-ink)]">
               AI Academy
             </h1>
-            <p className="text-xs text-[var(--color-accent-light)]">
-              Master AI from Scratch
-            </p>
           </div>
         </Link>
 
@@ -42,34 +33,32 @@ export default function Navbar() {
         <div className="hidden items-center gap-6 md:flex">
           <Link
             href="/"
-            className={`text-sm font-medium transition-colors ${
+            className={`text-base font-medium transition-colors ${
               pathname === "/"
-                ? "text-[var(--color-accent)]"
-                : "text-[var(--color-accent-light)] hover:text-[var(--color-accent)]"
+                ? "text-[var(--color-ink)]"
+                : "text-[var(--color-muted)] hover:text-[var(--color-ink)]"
             }`}
           >
             Courses
           </Link>
           <Link
             href="/papers"
-            className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${
+            className={`flex items-center gap-1.5 text-base font-medium transition-colors ${
               pathname.startsWith("/papers")
-                ? "text-[var(--color-accent)]"
-                : "text-[var(--color-accent-light)] hover:text-[var(--color-accent)]"
+                ? "text-[var(--color-ink)]"
+                : "text-[var(--color-muted)] hover:text-[var(--color-ink)]"
             }`}
           >
-            <Newspaper size={16} />
             Paper Everyday
           </Link>
           <Link
             href="/admin"
-            className={`flex items-center gap-1.5 text-sm font-medium transition-colors ${
+            className={`flex items-center gap-1.5 text-base font-medium transition-colors ${
               isAdmin
-                ? "text-[var(--color-accent)]"
-                : "text-[var(--color-accent-light)] hover:text-[var(--color-accent)]"
+                ? "text-[var(--color-ink)]"
+                : "text-[var(--color-muted)] hover:text-[var(--color-ink)]"
             }`}
           >
-            <GearSix size={16} />
             Admin
           </Link>
         </div>
@@ -77,42 +66,40 @@ export default function Navbar() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="rounded-lg p-2 text-[var(--color-accent-light)] transition-colors hover:bg-[var(--color-border-light)] md:hidden"
+          className="p-2 text-[var(--color-ink)] transition-colors hover:bg-[var(--color-border-light)] md:hidden"
           aria-label="Toggle menu"
         >
           {mobileMenuOpen ? (
-            <X size={22} weight="bold" />
+            <X size={24} weight="regular" />
           ) : (
-            <List size={22} weight="bold" />
+            <List size={24} weight="regular" />
           )}
         </button>
       </nav>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="animate-fade-in border-t border-[var(--color-border-light)] px-6 py-4 md:hidden">
-          <div className="flex flex-col gap-3">
+        <div className="border-t border-[var(--color-border)] px-6 py-4 md:hidden bg-[var(--color-canvas)]">
+          <div className="flex flex-col gap-4">
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-medium text-[var(--color-accent-light)] transition-colors hover:text-[var(--color-accent)]"
+              className="text-base font-medium text-[var(--color-ink)] transition-colors"
             >
               Courses
             </Link>
             <Link
               href="/papers"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-1.5 text-sm font-medium text-[var(--color-accent-light)] transition-colors hover:text-[var(--color-accent)]"
+              className="flex items-center gap-1.5 text-base font-medium text-[var(--color-ink)] transition-colors"
             >
-              <Newspaper size={16} />
               Paper Everyday
             </Link>
             <Link
               href="/admin"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-1.5 text-sm font-medium text-[var(--color-accent-light)] transition-colors hover:text-[var(--color-accent)]"
+              className="flex items-center gap-1.5 text-base font-medium text-[var(--color-ink)] transition-colors"
             >
-              <GearSix size={16} />
               Admin
             </Link>
           </div>

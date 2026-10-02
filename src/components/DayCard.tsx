@@ -41,7 +41,7 @@ function createDayStore(day: number, courseId: string) {
   return { getSnapshot, getServerSnapshot, subscribe };
 }
 
-export default function DayCard({ day, title, concept, index, courseId }: DayCardProps) {
+export default function DayCard({ day, title, concept, courseId }: DayCardProps) {
   const store = createDayStore(day, courseId);
   const completed = useSyncExternalStore(
     store.subscribe,
@@ -49,54 +49,37 @@ export default function DayCard({ day, title, concept, index, courseId }: DayCar
     store.getServerSnapshot
   );
 
-  const staggerClass = `stagger-${Math.min((index % 6) + 1, 6)}`;
-
   return (
     <Link
       href={`/course/${courseId}/day/${day}`}
-      className={`animate-fade-in ${staggerClass} group relative flex flex-col rounded-2xl border bg-[var(--color-card)] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
+      className={`group flex flex-col border border-[var(--color-border)] p-5 transition-colors ${
         completed
-          ? "border-[var(--color-success)]/30 bg-[var(--color-success-light)]/30"
-          : "border-[var(--color-border-light)] hover:border-[var(--color-border)]"
+          ? "bg-[#EAEAEA]"
+          : "bg-[var(--color-surface)] hover:bg-[#F9F9F9]"
       }`}
     >
-      {/* Day Badge + Completion */}
-      <div className="mb-3 flex items-center justify-between">
-        <span className="inline-flex items-center rounded-lg bg-[var(--color-alabaster)] px-2.5 py-1 text-xs font-semibold text-[var(--color-accent-light)]">
-          DAY {day}
+      <div className="mb-4 flex items-center justify-between border-b border-[var(--color-border)] pb-2">
+        <span className="text-sm font-medium text-[var(--color-ink)]">
+          Day {day}
         </span>
         {completed ? (
-          <CheckCircle
-            size={22}
-            weight="fill"
-            className="text-[var(--color-success)]"
-          />
+          <CheckCircle size={20} weight="fill" className="text-[var(--color-ink)]" />
         ) : (
-          <Circle
-            size={22}
-            weight="regular"
-            className="text-[var(--color-border)] transition-colors group-hover:text-[var(--color-accent-light)]"
-          />
+          <Circle size={20} weight="regular" className="text-[var(--color-border)] group-hover:text-[var(--color-ink)]" />
         )}
       </div>
 
-      {/* Title */}
-      <h3 className="mb-1.5 font-[family-name:var(--font-serif)] text-base font-bold leading-snug text-[var(--color-accent)] transition-colors group-hover:text-[var(--color-stone-warm)]">
+      <h3 className="mb-2 font-[family-name:var(--font-serif)] text-lg font-medium leading-snug text-[var(--color-ink)]">
         {title}
       </h3>
 
-      {/* Concept */}
-      <p className="mb-4 flex-1 text-sm leading-relaxed text-[var(--color-accent-light)]">
+      <p className="mb-4 flex-1 text-sm leading-relaxed text-[var(--color-ink)]">
         {concept}
       </p>
 
-      {/* Arrow */}
-      <div className="flex items-center text-xs font-medium text-[var(--color-accent-light)] transition-colors group-hover:text-[var(--color-accent)]">
+      <div className="flex items-center text-sm font-medium text-[var(--color-ink)]">
         <span>Start lesson</span>
-        <ArrowRight
-          size={14}
-          className="ml-1 transition-transform group-hover:translate-x-1"
-        />
+        <ArrowRight size={16} className="ml-2 transition-transform group-hover:translate-x-1" />
       </div>
     </Link>
   );

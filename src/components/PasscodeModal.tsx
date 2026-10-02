@@ -3,11 +3,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Key,
   X,
-  CheckCircle,
   Warning,
   Spinner,
+  ArrowRight
 } from "@phosphor-icons/react";
 
 interface PasscodeModalProps {
@@ -41,7 +40,6 @@ export default function PasscodeModal({
     if (isOpen) {
       document.addEventListener("keydown", handleEscape);
       document.body.style.overflow = "hidden";
-      // Focus first input
       setTimeout(() => inputRefs.current[0]?.focus(), 100);
     }
     return () => {
@@ -50,10 +48,7 @@ export default function PasscodeModal({
     };
   }, [isOpen, handleEscape]);
 
-
-
   const handleBlockChange = (index: number, value: string) => {
-    // Only allow alphanumeric characters
     const cleaned = value.replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
     const truncated = cleaned.slice(0, 4);
 
@@ -62,12 +57,10 @@ export default function PasscodeModal({
     setBlocks(newBlocks);
     setError("");
 
-    // Auto-advance to next block when current one is full
     if (truncated.length === 4 && index < 3) {
       inputRefs.current[index + 1]?.focus();
     }
 
-    // Auto-submit when all blocks are filled
     if (truncated.length === 4 && index === 3) {
       const fullCode = [...newBlocks.slice(0, 3), truncated].join("-");
       verifyCode(fullCode);
@@ -75,7 +68,6 @@ export default function PasscodeModal({
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    // Handle backspace to go to previous block
     if (e.key === "Backspace" && blocks[index] === "" && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
@@ -107,7 +99,6 @@ export default function PasscodeModal({
     setVerifying(true);
     setError("");
 
-    // Small delay for visual feedback
     setTimeout(() => {
       const expected = process.env.NEXT_PUBLIC_COURSE_ACCESS_CODE;
 
@@ -115,14 +106,12 @@ export default function PasscodeModal({
         setSuccess(true);
         localStorage.setItem(localStorageKey, "true");
 
-        // Redirect after success animation
         setTimeout(() => {
           router.push(`/course/${courseId}`);
         }, 1500);
       } else {
         setError("Invalid verification code. Please check your access key.");
         setVerifying(false);
-        // Shake animation would apply via CSS
         setBlocks(["", "", "", ""]);
         setTimeout(() => inputRefs.current[0]?.focus(), 100);
       }
@@ -133,82 +122,47 @@ export default function PasscodeModal({
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-[var(--color-accent)]/50 backdrop-blur-sm animate-fade-in"
+        className="absolute inset-0 bg-[var(--color-ink)] opacity-75"
         onClick={() => !success && onClose()}
       />
 
-      {/* Modal */}
-      <div className="animate-scale-in relative z-10 w-full max-w-md overflow-hidden rounded-2xl border border-[var(--color-border-light)] bg-white shadow-2xl">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-[var(--color-border-light)] px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-accent)] text-white">
-              <Key size={20} weight="duotone" />
-            </div>
-            <div>
-              <h3 className="font-[family-name:var(--font-serif)] text-lg font-bold text-[var(--color-accent)]">
-                Unlock Course
-              </h3>
-              <p className="text-xs text-[var(--color-accent-light)]">
-                Enter your 16-character access code
-              </p>
-            </div>
-          </div>
+      <div className="relative z-10 w-full max-w-lg border-2 border-[var(--color-border)] bg-[var(--color-surface)] shadow-[8px_8px_0px_0px_var(--color-ink)]">
+        <div className="flex items-center justify-between border-b-2 border-[var(--color-border)] px-8 py-6 bg-[var(--color-canvas)]">
+          <h3 className="font-[family-name:var(--font-serif)] text-2xl font-medium text-[var(--color-ink)]">
+            Unlock Course
+          </h3>
           {!success && (
             <button
               onClick={onClose}
-              className="rounded-lg p-1.5 text-[var(--color-accent-light)] transition-colors hover:bg-[var(--color-border-light)]"
+              className="p-2 text-[var(--color-ink)] border border-[var(--color-border)] hover:bg-[var(--color-ink)] hover:text-[var(--color-surface)] transition-colors"
             >
-              <X size={18} weight="bold" />
+              <X size={24} weight="regular" />
             </button>
           )}
         </div>
 
-        {/* Content */}
-        <div className="px-6 py-8">
+        <div className="px-8 py-12">
           {success ? (
-            /* Success State */
-            <div className="animate-scale-in flex flex-col items-center gap-4 py-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-success-light)]">
-                <CheckCircle
-                  size={36}
-                  weight="fill"
-                  className="text-[var(--color-success)]"
-                />
+            <div className="flex flex-col items-center gap-6 py-8">
+              <div className="text-[var(--color-success)] border-2 border-[var(--color-success)] p-4">
+                <h4 className="font-[family-name:var(--font-serif)] text-2xl font-medium">
+                  Course Unlocked
+                </h4>
               </div>
-              <h4 className="font-[family-name:var(--font-serif)] text-xl font-bold text-[var(--color-accent)]">
-                Course Unlocked!
-              </h4>
-              <p className="text-sm text-[var(--color-accent-light)]">
-                Redirecting you to the course...
+              <p className="text-base text-[var(--color-ink)] flex items-center gap-2">
+                Redirecting <ArrowRight className="animate-pulse" />
               </p>
-              <div className="mt-2 h-1 w-32 overflow-hidden rounded-full bg-[var(--color-border-light)]">
-                <div
-                  className="h-full rounded-full bg-[var(--color-success)]"
-                  style={{
-                    animation: "shimmer 1.5s ease-out forwards",
-                    backgroundSize: "200% 100%",
-                    width: "100%",
-                  }}
-                />
-              </div>
             </div>
           ) : (
-            /* Input State */
             <>
-              <p className="mb-6 text-center text-sm text-[var(--color-accent-light)]">
-                Enter your verification code in the format{" "}
-                <span className="font-mono font-semibold text-[var(--color-accent)]">
-                  XXXX-XXXX-XXXX-XXXX
-                </span>
+              <p className="mb-8 text-base text-[var(--color-ink)]">
+                Enter your 16-character access code:
               </p>
 
-              {/* 4-Block Input */}
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center justify-between gap-2">
                 {blocks.map((block, index) => (
-                  <div key={index} className="flex items-center gap-2">
+                  <div key={index} className="flex-1">
                     <input
                       ref={(el) => {
                         inputRefs.current[index] = el;
@@ -222,34 +176,27 @@ export default function PasscodeModal({
                       onPaste={index === 0 ? handlePaste : undefined}
                       maxLength={4}
                       disabled={verifying}
-                      className={`w-[4.5rem] rounded-xl border bg-[var(--color-alabaster)] px-2 py-3 text-center font-mono text-base font-bold tracking-widest text-[var(--color-accent)] outline-none transition-all ${
+                      className={`w-full border-2 bg-[var(--color-canvas)] px-2 py-4 text-center font-mono text-xl font-medium text-[var(--color-ink)] outline-none transition-colors ${
                         error
-                          ? "border-red-300 ring-2 ring-red-100"
-                          : "border-[var(--color-border)] focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/10"
+                          ? "border-red-500 bg-red-50"
+                          : "border-[var(--color-border)] focus:border-[var(--color-accent)] focus:bg-[var(--color-surface)]"
                       } disabled:opacity-50`}
-                      placeholder="····"
+                      placeholder="----"
                     />
-                    {index < 3 && (
-                      <span className="text-lg font-bold text-[var(--color-border)]">
-                        –
-                      </span>
-                    )}
                   </div>
                 ))}
               </div>
 
-              {/* Error Message */}
               {error && (
-                <div className="mt-4 flex items-center justify-center gap-2 text-sm text-red-500">
-                  <Warning size={16} weight="bold" />
+                <div className="mt-6 flex items-center gap-2 text-base font-medium text-red-600 bg-red-50 p-3 border-l-4 border-red-600">
+                  <Warning size={20} weight="fill" />
                   <span>{error}</span>
                 </div>
               )}
 
-              {/* Loading */}
               {verifying && (
-                <div className="mt-4 flex items-center justify-center gap-2 text-sm text-[var(--color-accent-light)]">
-                  <Spinner size={16} className="animate-spin" />
+                <div className="mt-6 flex items-center gap-3 text-base text-[var(--color-ink)] font-medium">
+                  <Spinner size={20} className="animate-spin" />
                   <span>Verifying code...</span>
                 </div>
               )}

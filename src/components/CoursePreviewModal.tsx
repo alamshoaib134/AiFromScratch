@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useCallback } from "react";
-import { X, BookOpen, Key, Clock, GraduationCap } from "@phosphor-icons/react";
+import { X, ArrowRight } from "@phosphor-icons/react";
 import { Course } from "@/lib/courses";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 
@@ -44,75 +44,61 @@ export default function CoursePreviewModal({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-[var(--color-accent)]/40 backdrop-blur-sm animate-fade-in"
+        className="absolute inset-0 bg-[var(--color-ink)] opacity-75"
         onClick={onClose}
       />
 
-      {/* Modal */}
-      <div className="animate-scale-in relative z-10 flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-[var(--color-border-light)] bg-white shadow-2xl">
-        {/* Header */}
-        <div className="flex items-start justify-between border-b border-[var(--color-border-light)] px-6 py-5">
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--color-accent)] text-white shadow-md">
-              <GraduationCap size={24} weight="duotone" />
-            </div>
-            <div>
-              <h2 className="font-[family-name:var(--font-serif)] text-xl font-bold text-[var(--color-accent)]">
-                {course.title}
-              </h2>
-              <p className="mt-0.5 text-sm text-[var(--color-accent-light)]">
-                {course.subtitle}
-              </p>
-            </div>
+      <div className="relative z-10 flex max-h-[90vh] w-full max-w-3xl flex-col border-2 border-[var(--color-border)] bg-[var(--color-surface)] shadow-[8px_8px_0px_0px_var(--color-ink)]">
+        <div className="flex items-start justify-between border-b-2 border-[var(--color-border)] px-8 py-6">
+          <div>
+            <h2 className="font-[family-name:var(--font-serif)] text-3xl font-medium text-[var(--color-ink)]">
+              {course.title}
+            </h2>
+            <p className="mt-2 text-base text-[var(--color-ink)]">
+              {course.subtitle}
+            </p>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-[var(--color-accent-light)] transition-colors hover:bg-[var(--color-border-light)] hover:text-[var(--color-accent)]"
+            className="p-2 text-[var(--color-ink)] border border-[var(--color-border)] hover:bg-[var(--color-ink)] hover:text-[var(--color-surface)] transition-colors"
           >
-            <X size={20} weight="bold" />
+            <X size={24} weight="regular" />
           </button>
         </div>
 
-        {/* Course Stats */}
-        <div className="flex items-center gap-6 border-b border-[var(--color-border-light)] bg-[var(--color-alabaster)] px-6 py-3">
-          <span className="flex items-center gap-1.5 text-sm text-[var(--color-accent-light)]">
-            <BookOpen size={16} weight="duotone" />
+        <div className="flex items-center gap-8 border-b-2 border-[var(--color-border)] bg-[var(--color-canvas)] px-8 py-4">
+          <span className="text-sm font-medium text-[var(--color-ink)]">
             {course.chapters} chapters
           </span>
-          <span className="flex items-center gap-1.5 text-sm text-[var(--color-accent-light)]">
-            <GraduationCap size={16} weight="duotone" />
+          <span className="text-sm font-medium text-[var(--color-ink)]">
             {course.lessons} lessons
           </span>
-          <span className="flex items-center gap-1.5 text-sm text-[var(--color-accent-light)]">
-            <Clock size={16} weight="duotone" />
+          <span className="text-sm font-medium text-[var(--color-ink)]">
             {course.duration}
           </span>
         </div>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-6">
+        <div className="flex-1 overflow-y-auto px-8 py-8 prose prose-ink max-w-none">
           <MarkdownRenderer content={overviewContent} />
         </div>
 
-        {/* Footer CTA */}
-        <div className="border-t border-[var(--color-border-light)] bg-[var(--color-alabaster)] px-6 py-4">
+        <div className="border-t-2 border-[var(--color-border)] bg-[var(--color-canvas)] p-6">
           {isUnlocked ? (
             <a
               href={`/course/${course.id}`}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-success)] px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:shadow-lg hover:-translate-y-0.5"
+              className="flex w-full items-center justify-between border-2 border-[var(--color-border)] bg-[var(--color-ink)] px-6 py-4 text-base font-medium text-[var(--color-surface)] transition-colors hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)]"
             >
-              <BookOpen size={18} weight="bold" />
               Continue Learning
+              <ArrowRight size={20} />
             </a>
           ) : (
             <button
               onClick={onUnlock}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-accent)] px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:shadow-lg hover:-translate-y-0.5"
+              className="flex w-full items-center justify-between border-2 border-[var(--color-border)] bg-[var(--color-ink)] px-6 py-4 text-base font-medium text-[var(--color-surface)] transition-colors hover:bg-[var(--color-accent)] hover:border-[var(--color-accent)]"
             >
-              <Key size={18} weight="bold" />
               Unlock Full Course
+              <ArrowRight size={20} />
             </button>
           )}
         </div>
