@@ -176,6 +176,12 @@ export default function HomePage() {
               Start Learning Free
             </a>
             <Link
+              href="/learn-ai-roadmap"
+              className="inline-flex items-center border-2 border-[var(--color-border)] bg-[var(--color-canvas)] px-6 py-3 text-base font-medium text-[var(--color-ink)] transition-colors hover:bg-[var(--color-surface)]"
+            >
+              Free AI Roadmap →
+            </Link>
+            <Link
               href="/papers"
               className="inline-flex items-center border-2 border-[var(--color-border)] bg-[var(--color-canvas)] px-6 py-3 text-base font-medium text-[var(--color-ink)] transition-colors hover:bg-[var(--color-surface)]"
             >
@@ -327,6 +333,57 @@ export default function HomePage() {
             </section>
           </div>
         </div>
+
+        {/* ─── Homepage FAQ (SEO) ─── */}
+        <section
+          id="faq"
+          className="mt-20 pt-12 border-t-2 border-[var(--color-border)]"
+          aria-labelledby="faq-heading"
+        >
+          <div className="mb-8">
+            <h2
+              id="faq-heading"
+              className="font-[family-name:var(--font-serif)] text-3xl font-medium text-[var(--color-ink)] sm:text-4xl"
+            >
+              Frequently Asked Questions
+            </h2>
+          </div>
+
+          <div className="flex flex-col border-b border-[var(--color-border)]">
+            {[
+              {
+                q: "How do I start learning AI from scratch?",
+                a: 'Start with Python — it\'s the essential programming language for AI. Then build your math intuition (linear algebra, calculus, probability). Move to classical machine learning, then deep learning, and finally NLP and large language models. Our free <a href="/learn-ai-roadmap" class="text-[var(--color-accent)] underline underline-offset-4 hover:opacity-80">AI Learning Roadmap</a> breaks each step down for complete beginners.',
+              },
+              {
+                q: "Do I need to know Python to learn AI?",
+                a: "Yes, Python is practically required. It's the primary language for every major AI framework (PyTorch, TensorFlow, Hugging Face). You don't need to be an expert — basic proficiency in variables, loops, functions, and working with libraries like NumPy and Pandas is enough to get started.",
+              },
+              {
+                q: "What is a Hybrid RAG system?",
+                a: "A Hybrid RAG (Retrieval-Augmented Generation) system combines both dense vector search (semantic similarity) and sparse keyword search (like BM25) to retrieve the most relevant information for a Large Language Model. This ensures the AI gets both the broad conceptual context and exact-match keywords, making it much more accurate for enterprise use cases.",
+              },
+            ].map((faq, i) => (
+              <details
+                key={i}
+                className="border-t border-[var(--color-border)] group"
+              >
+                <summary className="flex items-center justify-between py-5 cursor-pointer text-base font-medium text-[var(--color-ink)] hover:text-[var(--color-accent)] transition-colors list-none [&::-webkit-details-marker]:hidden">
+                  <span>{faq.q}</span>
+                  <span className="text-[var(--color-muted)] text-xl ml-4 group-open:rotate-45 transition-transform">
+                    +
+                  </span>
+                </summary>
+                <div className="pb-6 pr-8">
+                  <p 
+                    className="text-base leading-relaxed text-[var(--color-ink)]"
+                    dangerouslySetInnerHTML={{ __html: faq.a }}
+                  />
+                </div>
+              </details>
+            ))}
+          </div>
+        </section>
       </div>
 
       {/* Client-only interactive layer (modals, unlock state) */}

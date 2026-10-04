@@ -171,7 +171,7 @@ export default function PapersPage() {
                 return (
                   <Link
                     key={paper.paper_id}
-                    href={`/papers/${paper.paper_id}`}
+                    href={`/papers/${paper.slug}`}
                     className={`animate-fade-in ${staggerClass} group relative flex flex-col rounded-2xl border border-[var(--color-border-light)] bg-[var(--color-card)] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[var(--color-border)]`}
                   >
                     {/* Badge row */}

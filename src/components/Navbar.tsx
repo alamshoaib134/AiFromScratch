@@ -16,6 +16,7 @@ export default function Navbar() {
 
   const navLinks = [
     { href: "/", label: "Learn AI", exact: true },
+    { href: "/learn-ai-roadmap", label: "AI Roadmap", prefix: true },
     { href: "/papers", label: "Daily Papers", prefix: true },
     { href: "/admin", label: "Admin", prefix: true },
   ];
