@@ -11,6 +11,8 @@ chapterTitle: "Foundations"
 > **30-Day RAG Course, Week 1: Foundations**
 > **Date:** Sep 29, 2026 | **Estimated time:** 3-4 hours
 
+<iframe style="width: 100%; aspect-ratio: 16 / 9;" src="https://www.youtube.com/embed/T3NBieCTN14?si=IXlXkN93N4N_U_m0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 ---
 
 ## 🎯 Learning Objectives
