@@ -1,5 +1,5 @@
 ---
-title: "Robotics & Spatial Intelligence"
+title: "Robotics & Spatial Intelligence: Why AI Struggles to Fold Your Laundry"
 day: 20
 concept: "Training in the Matrix"
 chapter: 3

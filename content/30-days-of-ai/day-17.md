@@ -1,5 +1,5 @@
 ---
-title: "AI Memory"
+title: "AI Memory: How Agents Remember Who You Are"
 day: 17
 concept: "The scratchpad vs. the filing cabinet"
 chapter: 3

@@ -1,5 +1,5 @@
 ---
-title: "Multimodal AI"
+title: "Multimodal AI: Giving Machines Five Senses"
 day: 19
 concept: "The unified brain"
 chapter: 3

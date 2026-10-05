@@ -1,5 +1,5 @@
 ---
-title: "Voice AI"
+title: "Voice AI: How Machines Learned to Speak and Listen"
 day: 13
 concept: "Seeing sound"
 chapter: 2

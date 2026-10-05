@@ -1,5 +1,5 @@
 ---
-title: "AI Agents"
+title: "AI Agents: When Machines Stop Talking and Start Doing"
 day: 15
 concept: "The autonomous worker"
 chapter: 3

@@ -1,5 +1,5 @@
 ---
-title: "Multi-Agent Systems"
+title: "Multi-Agent Systems: Building an AI Swarm"
 day: 18
 concept: "The digital boardroom"
 chapter: 3

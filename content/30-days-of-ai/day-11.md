@@ -1,5 +1,5 @@
 ---
-title: "Diffusion Models"
+title: "Diffusion Models: How AI Dreams in Pictures and Video"
 day: 11
 concept: "Sculpting from static"
 chapter: 2

@@ -1,5 +1,5 @@
 ---
-title: "Supervised Fine-Tuning"
+title: "Fine-Tuning: Teaching Old AI New Tricks"
 day: 14
 concept: "The apprenticeship"
 chapter: 2

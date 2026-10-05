@@ -1,5 +1,5 @@
 ---
-title: "Computer Vision"
+title: "Computer Vision: How AI Actually \"Sees\" the World"
 day: 12
 concept: "The digital magnifying glass"
 chapter: 2

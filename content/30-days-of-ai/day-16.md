@@ -1,5 +1,5 @@
 ---
-title: "APIs"
+title: "How AI Uses Tools: Decoding the Magic of APIs"
 day: 16
 concept: "The digital waiters"
 chapter: 3
