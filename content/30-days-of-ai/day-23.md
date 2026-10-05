@@ -1,5 +1,5 @@
 ---
-title: "Deepfakes & Synthetic Media"
+title: "Deepfakes and The Synthetic Internet: When Seeing is No Longer Believing"
 day: 23
 concept: "The digital arms race"
 chapter: 4

@@ -1,5 +1,5 @@
 ---
-title: "The Human Element"
+title: "The Human Element: How to Future-Proof Your Career in the AI Era"
 day: 30
 concept: "Future-proofing yourself"
 chapter: 4

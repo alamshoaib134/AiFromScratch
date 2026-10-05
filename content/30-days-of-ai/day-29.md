@@ -1,5 +1,5 @@
 ---
-title: "AGI & ASI"
+title: "AGI vs. ASI: When Machines Match (and Surpass) the Human Mind"
 day: 29
 concept: "The endgame"
 chapter: 4

@@ -1,5 +1,5 @@
 ---
-title: "Offensive vs. Defensive AI"
+title: "The Cybersecurity Arms Race: Offensive vs. Defensive AI"
 day: 25
 concept: "The cyber warfare reality"
 chapter: 4

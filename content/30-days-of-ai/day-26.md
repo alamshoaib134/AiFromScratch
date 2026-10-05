@@ -1,5 +1,5 @@
 ---
-title: "Edge AI & TinyML"
+title: "Edge AI & TinyML: Taking AI Out of the Cloud"
 day: 26
 concept: "AI in your pocket"
 chapter: 4

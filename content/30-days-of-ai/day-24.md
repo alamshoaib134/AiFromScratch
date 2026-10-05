@@ -1,5 +1,5 @@
 ---
-title: "No-Code AI Agents"
+title: "No-Code AI Agents: Building Your Own Digital Intern"
 day: 24
 concept: "Programming with plain English"
 chapter: 4

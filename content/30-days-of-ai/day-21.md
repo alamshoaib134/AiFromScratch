@@ -1,5 +1,5 @@
 ---
-title: "AI Ethics & Bias"
+title: "AI Ethics & Bias: Why Algorithms Aren't Neutral"
 day: 21
 concept: "The mirror of humanity"
 chapter: 3

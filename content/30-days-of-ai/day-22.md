@@ -1,5 +1,5 @@
 ---
-title: "The Black Box & XAI"
+title: "The Black Box Problem: Why AI Can't Explain Itself"
 day: 22
 concept: "Forcing the math to explain itself"
 chapter: 4

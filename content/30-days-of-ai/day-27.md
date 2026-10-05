@@ -1,5 +1,5 @@
 ---
-title: "Automation Economics"
+title: "Automation Economics: How AI is Rewiring the Workplace"
 day: 27
 concept: "The end of linear scaling"
 chapter: 4

@@ -1,5 +1,5 @@
 ---
-title: "Smart Cities & Systemic AI"
+title: "Smart Cities & Systemic AI: The Algorithmic Conductor"
 day: 28
 concept: "The unified organism"
 chapter: 4
