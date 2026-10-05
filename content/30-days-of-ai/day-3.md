@@ -1,5 +1,5 @@
 ---
-title: "Text Embeddings"
+title: "Text Embeddings: Giving Words a Mathematical Map"
 day: 3
 concept: "Narrow AI, General AI, and Super AI"
 chapter: 1

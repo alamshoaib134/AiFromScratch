@@ -1,5 +1,5 @@
 ---
-title: "Tokenization"
+title: "Slicing the Text: What is Tokenization and Why Does It Matter?"
 day: 2
 concept: "Chopping text into puzzle pieces"
 chapter: 1

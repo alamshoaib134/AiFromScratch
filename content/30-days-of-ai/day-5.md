@@ -1,5 +1,5 @@
 ---
-title: "Knowledge Cutoff & Hallucinations"
+title: "The Knowledge Cutoff & Why AI Hallucinates Facts"
 day: 5
 concept: "The confident guesser"
 chapter: 1

@@ -1,13 +1,19 @@
 ---
-title: "NLP"
+title: "Foundations of AI: How Machine Learning and Deep Learning Fit Together"
 day: 1
 concept: "The bridge between human words and computer code"
 chapter: 1
 chapterTitle: "Foundations & Demystification"
 ---
 
-# Day 1: Demystifying the Buzzwords — AI vs. Machine Learning vs. Deep Learning
+# Day 1: Foundations of AI — How Machine Learning and Deep Learning Fit Together
 
+> 🎧 **Prefer to listen? Grab your headphones, sit back, and tune in for an in-depth audio breakdown.**
+> 
+> <audio controls style="width: 100%; margin-top: 10px; margin-bottom: 20px;">
+>   <source src="/audio/Inside_the_AI_Nesting_Doll.m4a" type="audio/mp4">
+>   Your browser does not support the audio element.
+> </audio>
 
 ![Day 1 Illustration](/images/ai_photos/day-1.png)
 

@@ -1,5 +1,5 @@
 ---
-title: "Attention Mechanism"
+title: "The Attention Mechanism: How AI Finally Learned to Read Context"
 day: 4
 concept: "Reading the room"
 chapter: 1

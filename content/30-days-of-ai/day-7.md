@@ -1,5 +1,5 @@
 ---
-title: "Vector Databases"
+title: "The Memory Engine: How Vector Databases Power Semantic Search"
 day: 7
 concept: "Smart filing cabinets"
 chapter: 1

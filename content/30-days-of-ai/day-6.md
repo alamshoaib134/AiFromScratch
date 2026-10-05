@@ -1,5 +1,5 @@
 ---
-title: "RAG"
+title: "RAG: Giving AI an Open-Book Test"
 day: 6
 concept: "The open-book test"
 chapter: 1

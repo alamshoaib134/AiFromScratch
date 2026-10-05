@@ -1,5 +1,5 @@
 ---
-title: "Semantic Search"
+title: "Semantic Search: Why AI Searches by Meaning, Not Words"
 day: 8
 concept: "Searching by meaning"
 chapter: 2

@@ -1,5 +1,5 @@
 ---
-title: "Prompt Augmentation"
+title: "Prompt Augmentation: Feeding AI the Context"
 day: 9
 concept: "The invisible context"
 chapter: 2

@@ -1,5 +1,5 @@
 ---
-title: "RAG vs Fine-Tuning"
+title: "RAG vs. Fine-Tuning: Which One Do You Actually Need?"
 day: 10
 concept: "How to specialize AI for your business"
 chapter: 2
