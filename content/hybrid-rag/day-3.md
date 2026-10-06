@@ -14,6 +14,10 @@ chapterTitle: "Foundations"
 >
 > **Prerequisites:** [Day 1: LLM Basics](./day01_llm_basics.md), [Day 2: Hallucination and RAG](./day02_hallucination_and_rag.md)
 
+<iframe style="width: 100%; aspect-ratio: 16 / 9;" src="https://www.youtube.com/embed/fN86ovfTdeU?si=r_gB7IqtwZPsurVG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+---
+
 ## 🎯 Learning Objectives
 
 By the end of today, you should be able to:

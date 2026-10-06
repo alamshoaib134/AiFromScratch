@@ -12,6 +12,8 @@ chapterTitle: "Foundations"
 > **Date:** Sep 30, 2026 | **Estimated time:** 3-4 hours  
 > **Prerequisite:** [Day 1: LLM Basics](./day01_llm_basics.md)
 
+<iframe style="width: 100%; aspect-ratio: 16 / 9;" src="https://www.youtube.com/embed/6mbi0KJbHig?si=tV8VCe47oW24Pf_D" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 ---
 
 ## 🎯 Learning Objectives
