@@ -9,6 +9,12 @@ chapterTitle: "Foundations & Demystification"
 Day 4: The Attention Mechanism — How AI Finally Learned to Read Context
 =======================================================================
 
+> 🎧 **Prefer to listen? Grab your headphones, sit back, and tune in for an in-depth audio breakdown.**
+> 
+> <audio controls style="width: 100%; margin-top: 10px; margin-bottom: 20px;">
+>   <source src="/audio/How_AI_Reads_Context_All_at_Once.m4a" type="audio/mp4">
+>   Your browser does not support the audio element.
+> </audio>
 
 If you have used ChatGPT, Claude, or any modern Large Language Model, you have likely noticed how remarkably human-like they are at maintaining the thread of a conversation. You can type a multi-paragraph prompt, and the AI will remember a tiny detail you mentioned in the very first sentence.
 
