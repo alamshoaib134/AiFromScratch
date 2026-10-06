@@ -1,42 +1,47 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore, useMemo } from "react";
 
 interface ProgressBarProps {
   totalDays: number;
+  courseId: string;
 }
 
-function getSnapshot(): number {
-  if (typeof window === "undefined") return 0;
-  const stored = localStorage.getItem("ai-challenge-progress");
-  if (!stored) return 0;
-  try {
-    const progress: Record<string, boolean> = JSON.parse(stored);
-    return Object.values(progress).filter(Boolean).length;
-  } catch {
+function createProgressStore(courseId: string) {
+  function getSnapshot(): number {
+    if (typeof window === "undefined") return 0;
+    const stored = localStorage.getItem(`${courseId}-progress`);
+    if (!stored) return 0;
+    try {
+      const progress: Record<string, boolean> = JSON.parse(stored);
+      return Object.values(progress).filter(Boolean).length;
+    } catch {
+      return 0;
+    }
+  }
+
+  function getServerSnapshot(): number {
     return 0;
   }
+
+  function subscribe(callback: () => void): () => void {
+    window.addEventListener("storage", callback);
+    window.addEventListener("progress-updated", callback);
+    return () => {
+      window.removeEventListener("storage", callback);
+      window.removeEventListener("progress-updated", callback);
+    };
+  }
+
+  return { getSnapshot, getServerSnapshot, subscribe };
 }
 
-function getServerSnapshot(): number {
-  return 0;
-}
-
-function subscribe(callback: () => void): () => void {
-  window.addEventListener("storage", callback);
-  // Also listen for custom events from our own completion button
-  window.addEventListener("progress-updated", callback);
-  return () => {
-    window.removeEventListener("storage", callback);
-    window.removeEventListener("progress-updated", callback);
-  };
-}
-
-export default function ProgressBar({ totalDays }: ProgressBarProps) {
+export default function ProgressBar({ totalDays, courseId }: ProgressBarProps) {
+  const store = useMemo(() => createProgressStore(courseId), [courseId]);
   const completedDays = useSyncExternalStore(
-    subscribe,
-    getSnapshot,
-    getServerSnapshot
+    store.subscribe,
+    store.getSnapshot,
+    store.getServerSnapshot
   );
 
   const percentage =

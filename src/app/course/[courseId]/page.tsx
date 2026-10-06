@@ -51,7 +51,7 @@ export default async function CourseViewerPage({ params }: CourseViewerPageProps
 
           {/* Progress Bar */}
           <div className="mx-auto mt-8 max-w-md">
-            <ProgressBar totalDays={totalDays} />
+            <ProgressBar totalDays={totalDays} courseId={courseId} />
           </div>
         </section>
 
