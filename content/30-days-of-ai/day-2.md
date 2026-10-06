@@ -9,6 +9,12 @@ chapterTitle: "Foundations & Demystification"
 Day 2: Slicing the Text — What is Tokenization and Why Does It Matter?
 ======================================================================
 
+> 🎧 **Prefer to listen? Grab your headphones, sit back, and tune in for an in-depth audio breakdown.**
+> 
+> <audio controls style="width: 100%; margin-top: 10px; margin-bottom: 20px;">
+>   <source src="/audio/Why_AI_Sees_Numbers_Not_Words.m4a" type="audio/mp4">
+>   Your browser does not support the audio element.
+> </audio>
 
 ![Day 2 Illustration](/images/ai_photos/day-2.png)
 

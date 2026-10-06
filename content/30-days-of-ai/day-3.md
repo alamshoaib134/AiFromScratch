@@ -9,6 +9,13 @@ chapterTitle: "How AI understands meaning"
 Day 3: Text Embeddings — Giving Words a Map
 ===========================================
 
+> 🎧 **Prefer to listen? Grab your headphones, sit back, and tune in for an in-depth audio breakdown.**
+> 
+> <audio controls style="width: 100%; margin-top: 10px; margin-bottom: 20px;">
+>   <source src="/audio/How_Text_Embeddings_Turn_Words_Into_Math.m4a" type="audio/mp4">
+>   Your browser does not support the audio element.
+> </audio>
+
 Have you ever wondered how an AI tool can read a sentence you wrote, understand your underlying mood, and reply with the perfect tone? It feels like magic, or at least like the machine possesses a human-like grasp of language.
 
 The reality is far more fascinating. Computers are fundamentally incapable of understanding words, alphabet letters, or grammar rules. They only understand numbers. To bridge this gap, AI researchers created a concept called **Text Embeddings**. This is the foundational technology that allows machines to turn human language into a mathematical map where meaning can be calculated.
