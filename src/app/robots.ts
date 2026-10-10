@@ -24,7 +24,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin/', '/api/'],
       },
     ],
-    sitemap: 'https://aifromscratch.dev/sitemap.xml',
-    host: 'https://aifromscratch.dev',
+    sitemap: 'https://aifromscratch.vercel.app/sitemap.xml',
+    host: 'https://aifromscratch.vercel.app',
   };
 }

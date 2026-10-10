@@ -18,7 +18,7 @@ const ibmPlexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://aifromscratch.dev"),
+  metadataBase: new URL("https://aifromscratch.vercel.app"),
   title: {
     default:
       "AI Academy — Learn AI for Beginners | Daily Research & Practical Guides",
@@ -40,20 +40,20 @@ export const metadata: Metadata = {
   creator: "Shoaib Alam",
   publisher: "AI Academy",
   alternates: {
-    canonical: "https://aifromscratch.dev/",
+    canonical: "https://aifromscratch.vercel.app/",
   },
   openGraph: {
     title:
       "AI Academy — Learn AI for Beginners | Daily Research & Practical Guides",
     description:
       "Free educational platform to learn artificial intelligence from scratch. Explore beginner-friendly AI tutorials, step-by-step guides, and daily simplified research papers.",
-    url: "https://aifromscratch.dev/",
+    url: "https://aifromscratch.vercel.app/",
     siteName: "AI Academy",
     type: "website",
     locale: "en_US",
     images: [
       {
-        url: "https://aifromscratch.dev/images/og-default.png",
+        url: "https://aifromscratch.vercel.app/images/og-default.png",
         width: 1200,
         height: 630,
         alt: "AI Academy — Learn AI for Beginners",
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     title: "AI Academy — Learn AI for Beginners",
     description:
       "Free educational platform to learn AI from scratch. Beginner-friendly tutorials, step-by-step guides, and daily simplified research papers.",
-    images: ["https://aifromscratch.dev/images/og-default.png"],
+    images: ["https://aifromscratch.vercel.app/images/og-default.png"],
   },
   robots: {
     index: true,

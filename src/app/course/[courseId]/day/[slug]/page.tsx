@@ -68,7 +68,7 @@ export default async function DayPage({ params }: DayPageProps) {
     "@type": "Article",
     headline: `Day ${day.day}: ${day.title}`,
     description: day.concept,
-    url: `https://aifromscratch.dev/course/${courseId}/day/${day.day}`,
+    url: `https://aifromscratch.vercel.app/course/${courseId}/day/${day.day}`,
     author: {
       "@type": "Person",
       name: "Shoaib Alam"
@@ -87,19 +87,19 @@ export default async function DayPage({ params }: DayPageProps) {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://aifromscratch.dev/"
+        "item": "https://aifromscratch.vercel.app/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": course.title,
-        "item": `https://aifromscratch.dev/course/${courseId}`
+        "item": `https://aifromscratch.vercel.app/course/${courseId}`
       },
       {
         "@type": "ListItem",
         "position": 3,
         "name": `Day ${day.day}`,
-        "item": `https://aifromscratch.dev/course/${courseId}/day/${day.day}`
+        "item": `https://aifromscratch.vercel.app/course/${courseId}/day/${day.day}`
       }
     ]
   };

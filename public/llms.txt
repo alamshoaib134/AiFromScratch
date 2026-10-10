@@ -24,5 +24,5 @@
 AI Academy is created by Shoaib Alam, an AI Engineer at JPMC and NLP Researcher at IIT Gandhinagar, published at EMNLP 2024 (LEGOBench). The platform bridges cutting-edge AI research with accessible, beginner-friendly education.
 
 ## Contact
-- Website: https://aifromscratch.dev
+- Website: https://aifromscratch.vercel.app
 - Portfolio: https://shoaibalam.vercel.app/

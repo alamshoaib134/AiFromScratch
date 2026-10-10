@@ -18,7 +18,7 @@ import {
   BookOpen,
 } from "@phosphor-icons/react/dist/ssr";
 
-const BASE_URL = "https://aifromscratch.dev";
+const BASE_URL = "https://aifromscratch.vercel.app";
 
 /* ─── Static Generation (SSG) ─── */
 
@@ -195,13 +195,13 @@ export default async function PaperSlugPage({ params }: PaperPageProps) {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://aifromscratch.dev/"
+        "item": "https://aifromscratch.vercel.app/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Papers",
-        "item": "https://aifromscratch.dev/papers"
+        "item": "https://aifromscratch.vercel.app/papers"
       },
       {
         "@type": "ListItem",

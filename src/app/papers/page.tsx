@@ -16,7 +16,7 @@ export const metadata = {
   description:
     "Daily AI research paper breakdowns — one paper explained clearly, every day. Stay current with the frontier of artificial intelligence research.",
   alternates: {
-    canonical: "https://aifromscratch.dev/papers",
+    canonical: "https://aifromscratch.vercel.app/papers",
   },
 };
 
@@ -93,13 +93,13 @@ export default function PapersPage() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://aifromscratch.dev/"
+        "item": "https://aifromscratch.vercel.app/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Papers",
-        "item": "https://aifromscratch.dev/papers"
+        "item": "https://aifromscratch.vercel.app/papers"
       }
     ]
   };

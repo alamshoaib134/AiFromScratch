@@ -21,12 +21,12 @@ export async function generateMetadata({ params }: CourseViewerPageProps) {
     title: `${course.title} | AI Academy`,
     description: course.description,
     alternates: {
-      canonical: `https://aifromscratch.dev/course/${courseId}`,
+      canonical: `https://aifromscratch.vercel.app/course/${courseId}`,
     },
     openGraph: {
       title: `${course.title} | AI Academy`,
       description: course.description,
-      url: `https://aifromscratch.dev/course/${courseId}`,
+      url: `https://aifromscratch.vercel.app/course/${courseId}`,
     }
   };
 }
@@ -52,13 +52,13 @@ export default async function CourseViewerPage({ params }: CourseViewerPageProps
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://aifromscratch.dev/"
+        "item": "https://aifromscratch.vercel.app/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": course.title,
-        "item": `https://aifromscratch.dev/course/${courseId}`
+        "item": `https://aifromscratch.vercel.app/course/${courseId}`
       }
     ]
   };
