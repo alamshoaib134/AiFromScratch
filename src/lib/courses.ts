@@ -30,9 +30,9 @@ export const courses: Course[] = [
     lessons: 30,
     duration: "30 days",
     localStorageKey: "course_30_days_unlocked",
-    originalPrice: 14999,
-    discountPrice: 1999,
-    discountPercentage: 87,
+    originalPrice: 5999,
+    discountPrice: 199,
+    discountPercentage: 97,
   },
   {
     id: "hybrid-rag",
