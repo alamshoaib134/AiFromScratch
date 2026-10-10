@@ -21,11 +21,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://aifromscratch.in"),
   title: {
     default:
-      "AI From Scratch — Learn AI for Beginners | Daily Research & Practical Guides",
+      "Learn AI from Scratch | Free Beginner Guides & Research",
     template: "%s | AI From Scratch",
   },
   description:
-    "Free educational platform to learn artificial intelligence from scratch. Explore beginner-friendly AI tutorials, step-by-step guides, and daily simplified research papers.",
+    "Learn artificial intelligence from scratch for free. Explore beginner-friendly AI tutorials, step-by-step guides, and daily simplified research paper breakdowns.",
   keywords: [
     "learn AI",
     "artificial intelligence for beginners",
@@ -44,9 +44,9 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title:
-      "AI From Scratch — Learn AI for Beginners | Daily Research & Practical Guides",
+      "Learn AI from Scratch | Free Beginner Guides & Research",
     description:
-      "Free educational platform to learn artificial intelligence from scratch. Explore beginner-friendly AI tutorials, step-by-step guides, and daily simplified research papers.",
+      "Learn artificial intelligence from scratch for free. Explore beginner-friendly AI tutorials, step-by-step guides, and daily simplified research paper breakdowns.",
     url: "https://aifromscratch.in/",
     siteName: "AI From Scratch",
     type: "website",
@@ -62,9 +62,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI From Scratch — Learn AI for Beginners",
+    title: "Learn AI from Scratch | Free Beginner Guides & Research",
     description:
-      "Free educational platform to learn AI from scratch. Beginner-friendly tutorials, step-by-step guides, and daily simplified research papers.",
+      "Learn artificial intelligence from scratch for free. Explore beginner-friendly AI tutorials, step-by-step guides, and daily simplified research paper breakdowns.",
     images: ["https://aifromscratch.in/images/og-default.png"],
   },
   robots: {
