@@ -1,6 +1,6 @@
-# AI Academy
+# AI From Scratch
 
-> AI Academy is a free, beginner-friendly educational sharing platform designed to help anyone learn artificial intelligence through clear, step-by-step guides and daily paper breakdowns.
+> AI From Scratch is a free, beginner-friendly educational sharing platform designed to help anyone learn artificial intelligence through clear, step-by-step guides and daily paper breakdowns.
 
 ## Core Learning Paths
 - [Learn AI for Beginners](/): Foundational concepts, hands-on tutorials, and practical guides explained in plain language.
@@ -21,8 +21,8 @@
 - Multimodal AI & Computer Vision: Explore image generation, video understanding, and spatial intelligence.
 
 ## About
-AI Academy is created by Shoaib Alam, an AI Engineer at JPMC and NLP Researcher at IIT Gandhinagar, published at EMNLP 2024 (LEGOBench). The platform bridges cutting-edge AI research with accessible, beginner-friendly education.
+AI From Scratch is created by Shoaib Alam, an AI Engineer at JPMC and NLP Researcher at IIT Gandhinagar, published at EMNLP 2024 (LEGOBench). The platform bridges cutting-edge AI research with accessible, beginner-friendly education.
 
 ## Contact
-- Website: https://aifromscratch.vercel.app
+- Website: https://aifromscratch.in
 - Portfolio: https://shoaibalam.vercel.app/

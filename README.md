@@ -1,5 +1,7 @@
 # AI FROM SCRATCH
 
+![AI From Scratch](public/images/og-default.png)
+
 The Ultimate 30-Day Guide to the Vocabulary, Mechanics, and Future of Artificial Intelligence
 
 ## Table of Contents

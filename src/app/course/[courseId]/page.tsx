@@ -18,15 +18,15 @@ export async function generateMetadata({ params }: CourseViewerPageProps) {
   if (!course) return { title: "Course Not Found" };
 
   return {
-    title: `${course.title} | AI Academy`,
+    title: `${course.title} | AI From Scratch`,
     description: course.description,
     alternates: {
-      canonical: `https://aifromscratch.vercel.app/course/${courseId}`,
+      canonical: `https://aifromscratch.in/course/${courseId}`,
     },
     openGraph: {
-      title: `${course.title} | AI Academy`,
+      title: `${course.title} | AI From Scratch`,
       description: course.description,
-      url: `https://aifromscratch.vercel.app/course/${courseId}`,
+      url: `https://aifromscratch.in/course/${courseId}`,
     }
   };
 }
@@ -52,13 +52,13 @@ export default async function CourseViewerPage({ params }: CourseViewerPageProps
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://aifromscratch.vercel.app/"
+        "item": "https://aifromscratch.in/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": course.title,
-        "item": `https://aifromscratch.vercel.app/course/${courseId}`
+        "item": `https://aifromscratch.in/course/${courseId}`
       }
     ]
   };
@@ -77,7 +77,7 @@ export default async function CourseViewerPage({ params }: CourseViewerPageProps
             className="inline-flex items-center gap-1.5 text-sm text-[var(--color-accent-light)] transition-colors hover:text-[var(--color-accent)]"
           >
             <ArrowLeft size={14} />
-            Back to AI Academy
+            Back to AI From Scratch
           </Link>
         </div>
 

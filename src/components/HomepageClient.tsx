@@ -86,7 +86,7 @@ export default function HomepageClient({
         {/* Hero Section */}
         <header className="mb-20 text-left border-b-4 border-[var(--color-border)] pb-12">
           <h1 className="font-[family-name:var(--font-serif)] text-5xl font-medium leading-tight text-[var(--color-ink)] sm:text-7xl mb-6">
-            AI Academy
+            AI From Scratch
           </h1>
           <p className="max-w-3xl text-xl leading-relaxed text-[var(--color-ink)]">
             A curated collection of courses designed to take you from AI fundamentals to advanced systems. 

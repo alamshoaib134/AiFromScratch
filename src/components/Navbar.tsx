@@ -36,7 +36,7 @@ export default function Navbar() {
         >
           <div>
             <span className="font-[family-name:var(--font-serif)] text-2xl font-bold tracking-tight text-[var(--color-ink)]">
-              AI Academy
+              AI From Scratch
             </span>
           </div>
         </Link>

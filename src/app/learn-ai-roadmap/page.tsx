@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 /* ─── SEO Metadata ─── */
-const BASE_URL = "https://aifromscratch.vercel.app";
+const BASE_URL = "https://aifromscratch.in";
 
 export const metadata: Metadata = {
   title:
-    "How to Learn AI from Scratch in 2026 — Complete Beginner Roadmap | AI Academy",
+    "How to Learn AI from Scratch in 2026 — Complete Beginner Roadmap | AI From Scratch",
   description:
     "The ultimate free roadmap to learn Artificial Intelligence from scratch. Step-by-step guide covering Python, math fundamentals, machine learning, deep learning, NLP, and building real AI projects. No prior experience needed.",
   keywords: [
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     description:
       "The ultimate free roadmap to learn AI from zero. Python, math, ML, deep learning, NLP — step by step.",
     url: `${BASE_URL}/learn-ai-roadmap`,
-    siteName: "AI Academy",
+    siteName: "AI From Scratch",
     type: "article",
     locale: "en_US",
   },
@@ -155,7 +155,7 @@ const phases = [
     resources: [
       { name: "Hugging Face NLP Course (free)", url: "https://huggingface.co/learn/nlp-course" },
       { name: "Attention Is All You Need (paper)", url: "https://arxiv.org/abs/1706.03762" },
-      { name: "AI Academy: Hybrid RAG Course", url: "/course/hybrid-rag", internal: true },
+      { name: "AI From Scratch: Hybrid RAG Course", url: "/course/hybrid-rag", internal: true },
     ],
     milestone:
       "You can fine-tune a pre-trained transformer, build a basic RAG system, and explain how attention works.",
@@ -178,7 +178,7 @@ const phases = [
     resources: [
       { name: "FastAPI Documentation", url: "https://fastapi.tiangolo.com/" },
       { name: "MLflow — Experiment Tracking", url: "https://mlflow.org/" },
-      { name: "AI Academy: 30-Day AI Course", url: "/course/30-days-of-ai", internal: true },
+      { name: "AI From Scratch: 30-Day AI Course", url: "/course/30-days-of-ai", internal: true },
     ],
     projectIdeas: [
       "Build a chatbot that answers questions about a PDF using RAG",
@@ -245,7 +245,7 @@ const articleSchema = {
   },
   publisher: {
     "@type": "EducationalOrganization",
-    name: "AI Academy",
+    name: "AI From Scratch",
     url: BASE_URL,
   },
   datePublished: "2026-01-15",
@@ -282,13 +282,13 @@ export default function LearnAIRoadmapPage() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://aifromscratch.vercel.app/"
+        "item": "https://aifromscratch.in/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Roadmap",
-        "item": "https://aifromscratch.vercel.app/learn-ai-roadmap"
+        "item": "https://aifromscratch.in/learn-ai-roadmap"
       }
     ]
   };

@@ -18,11 +18,11 @@ const ibmPlexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://aifromscratch.vercel.app"),
+  metadataBase: new URL("https://aifromscratch.in"),
   title: {
     default:
-      "AI Academy — Learn AI for Beginners | Daily Research & Practical Guides",
-    template: "%s | AI Academy",
+      "AI From Scratch — Learn AI for Beginners | Daily Research & Practical Guides",
+    template: "%s | AI From Scratch",
   },
   description:
     "Free educational platform to learn artificial intelligence from scratch. Explore beginner-friendly AI tutorials, step-by-step guides, and daily simplified research papers.",
@@ -38,34 +38,34 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Shoaib Alam", url: "https://shoaibalam.vercel.app/" }],
   creator: "Shoaib Alam",
-  publisher: "AI Academy",
+  publisher: "AI From Scratch",
   alternates: {
-    canonical: "https://aifromscratch.vercel.app/",
+    canonical: "https://aifromscratch.in/",
   },
   openGraph: {
     title:
-      "AI Academy — Learn AI for Beginners | Daily Research & Practical Guides",
+      "AI From Scratch — Learn AI for Beginners | Daily Research & Practical Guides",
     description:
       "Free educational platform to learn artificial intelligence from scratch. Explore beginner-friendly AI tutorials, step-by-step guides, and daily simplified research papers.",
-    url: "https://aifromscratch.vercel.app/",
-    siteName: "AI Academy",
+    url: "https://aifromscratch.in/",
+    siteName: "AI From Scratch",
     type: "website",
     locale: "en_US",
     images: [
       {
-        url: "https://aifromscratch.vercel.app/images/og-default.png",
+        url: "https://aifromscratch.in/images/og-default.png",
         width: 1200,
         height: 630,
-        alt: "AI Academy — Learn AI for Beginners",
+        alt: "AI From Scratch — Learn AI for Beginners",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Academy — Learn AI for Beginners",
+    title: "AI From Scratch — Learn AI for Beginners",
     description:
       "Free educational platform to learn AI from scratch. Beginner-friendly tutorials, step-by-step guides, and daily simplified research papers.",
-    images: ["https://aifromscratch.vercel.app/images/og-default.png"],
+    images: ["https://aifromscratch.in/images/og-default.png"],
   },
   robots: {
     index: true,
@@ -100,7 +100,7 @@ export default function RootLayout({
           <div className="mx-auto max-w-6xl px-6 py-12">
             <div className="flex flex-col items-start gap-4">
               <p className="text-base font-medium">
-                © {new Date().getFullYear()} AI Academy
+                © {new Date().getFullYear()} AI From Scratch
               </p>
               <p className="font-[family-name:var(--font-serif)] text-xl text-[var(--color-muted)]">
                 Demystifying AI — one lesson, one paper, one day at a time.

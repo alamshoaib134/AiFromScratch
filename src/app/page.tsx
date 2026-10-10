@@ -9,7 +9,7 @@ import HomepageInteractions from "@/components/HomepageInteractions";
 
 /* ─── Page-level SEO Metadata ─── */
 export const metadata: Metadata = {
-  title: "AI Academy — Learn AI for Beginners | Daily Research & Practical Guides",
+  title: "AI From Scratch — Learn AI for Beginners | Daily Research & Practical Guides",
   description:
     "Free educational platform to learn artificial intelligence from scratch. Explore beginner-friendly AI tutorials, step-by-step guides, and daily simplified research papers.",
   keywords: [
@@ -23,20 +23,20 @@ export const metadata: Metadata = {
     "AI academy",
   ],
   alternates: {
-    canonical: "https://aifromscratch.vercel.app/",
+    canonical: "https://aifromscratch.in/",
   },
   openGraph: {
-    title: "AI Academy — Learn AI for Beginners | Daily Research & Practical Guides",
+    title: "AI From Scratch — Learn AI for Beginners | Daily Research & Practical Guides",
     description:
       "Free educational platform to learn artificial intelligence from scratch. Explore beginner-friendly AI tutorials, step-by-step guides, and daily simplified research papers.",
-    url: "https://aifromscratch.vercel.app/",
-    siteName: "AI Academy",
+    url: "https://aifromscratch.in/",
+    siteName: "AI From Scratch",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Academy — Learn AI for Beginners",
+    title: "AI From Scratch — Learn AI for Beginners",
     description:
       "Free educational platform to learn AI from scratch. Beginner-friendly tutorials, step-by-step guides, and daily simplified research papers.",
   },
@@ -52,12 +52,12 @@ function getOverviewContent(): string {
 }
 
 /* ─── JSON-LD Structured Data ─── */
-const BASE_URL = "https://aifromscratch.vercel.app";
+const BASE_URL = "https://aifromscratch.in";
 
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "EducationalOrganization",
-  name: "AI Academy",
+  name: "AI From Scratch",
   url: BASE_URL,
   description:
     "A free, beginner-friendly educational sharing platform dedicated to breaking down artificial intelligence into easy-to-understand concepts, step-by-step guides, and daily research paper breakdowns.",
@@ -93,7 +93,7 @@ const personSchema = {
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "AI Academy",
+  name: "AI From Scratch",
   url: BASE_URL,
   description:
     "Free educational platform to learn artificial intelligence from scratch with beginner-friendly guides and daily research paper breakdowns.",
@@ -118,7 +118,7 @@ function buildCourseSchemas() {
       url: `${BASE_URL}/course/${course.id}`,
       provider: {
         "@type": "EducationalOrganization",
-        name: "AI Academy",
+        name: "AI From Scratch",
         url: BASE_URL,
       },
       educationalLevel: "Beginner",
@@ -152,7 +152,7 @@ const learningResourceSchema = {
   isAccessibleForFree: true,
   provider: {
     "@type": "EducationalOrganization",
-    name: "AI Academy",
+    name: "AI From Scratch",
     url: BASE_URL,
   },
 };
@@ -331,7 +331,7 @@ export default function HomePage() {
               <div className="flex flex-col">
                 <Image
                   src="https://avatars.githubusercontent.com/u/52914419?v=4"
-                  alt="Shoaib Alam — AI Engineer and creator of AI Academy"
+                  alt="Shoaib Alam — AI Engineer and creator of AI From Scratch"
                   width={400}
                   height={400}
                   className="w-full h-auto grayscale border border-[var(--color-border)] mb-4"

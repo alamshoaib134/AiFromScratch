@@ -18,7 +18,7 @@ import {
   BookOpen,
 } from "@phosphor-icons/react/dist/ssr";
 
-const BASE_URL = "https://aifromscratch.vercel.app";
+const BASE_URL = "https://aifromscratch.in";
 
 /* ─── Static Generation (SSG) ─── */
 
@@ -50,10 +50,10 @@ export async function generateMetadata({
   const paper = getPaperBySlug(slug);
 
   if (!paper) {
-    return { title: "Paper Not Found | AI Academy" };
+    return { title: "Paper Not Found | AI From Scratch" };
   }
 
-  const seoTitle = `${paper.title} Explained for Beginners | AI Academy`;
+  const seoTitle = `${paper.title} Explained for Beginners | AI From Scratch`;
   const seoDescription = paper.abstract?.slice(0, 155) + "…";
 
   return {
@@ -65,7 +65,7 @@ export async function generateMetadata({
       `${paper.title} summary`,
       "AI research paper explained",
       "AI paper for beginners",
-      "AI Academy paper breakdown",
+      "AI From Scratch paper breakdown",
     ],
     alternates: {
       canonical: `${BASE_URL}/papers/${slug}`,
@@ -74,7 +74,7 @@ export async function generateMetadata({
       title: seoTitle,
       description: seoDescription,
       url: `${BASE_URL}/papers/${slug}`,
-      siteName: "AI Academy",
+      siteName: "AI From Scratch",
       type: "article",
       locale: "en_US",
       publishedTime: paper.published_date,
@@ -173,7 +173,7 @@ export default async function PaperSlugPage({ params }: PaperPageProps) {
     })),
     publisher: {
       "@type": "EducationalOrganization",
-      name: "AI Academy",
+      name: "AI From Scratch",
       url: BASE_URL,
     },
     mainEntityOfPage: {
@@ -195,13 +195,13 @@ export default async function PaperSlugPage({ params }: PaperPageProps) {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://aifromscratch.vercel.app/"
+        "item": "https://aifromscratch.in/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Papers",
-        "item": "https://aifromscratch.vercel.app/papers"
+        "item": "https://aifromscratch.in/papers"
       },
       {
         "@type": "ListItem",

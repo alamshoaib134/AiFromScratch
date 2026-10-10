@@ -4,7 +4,7 @@ import { getAllPapersWithSlugs } from '@/lib/papers';
 import { getAllDays } from '@/lib/content';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://aifromscratch.vercel.app';
+  const baseUrl = 'https://aifromscratch.in';
 
   /* ─── Static pages ─── */
   const staticPages: MetadataRoute.Sitemap = [

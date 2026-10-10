@@ -12,11 +12,11 @@ import {
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Paper Everyday | AI Academy",
+  title: "Paper Everyday | AI From Scratch",
   description:
     "Daily AI research paper breakdowns — one paper explained clearly, every day. Stay current with the frontier of artificial intelligence research.",
   alternates: {
-    canonical: "https://aifromscratch.vercel.app/papers",
+    canonical: "https://aifromscratch.in/papers",
   },
 };
 
@@ -93,13 +93,13 @@ export default function PapersPage() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://aifromscratch.vercel.app/"
+        "item": "https://aifromscratch.in/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Papers",
-        "item": "https://aifromscratch.vercel.app/papers"
+        "item": "https://aifromscratch.in/papers"
       }
     ]
   };
@@ -118,7 +118,7 @@ export default function PapersPage() {
           className="inline-flex items-center gap-1.5 text-sm text-[var(--color-accent-light)] transition-colors hover:text-[var(--color-accent)]"
         >
           <ArrowLeft size={14} />
-          Back to AI Academy
+          Back to AI From Scratch
         </Link>
       </div>
 
