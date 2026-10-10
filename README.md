@@ -17,6 +17,21 @@ The Ultimate 30-Day Guide to the Vocabulary, Mechanics, and Future of Artificial
 
 Welcome to AI From Scratch.
 
+### Sneak Peek
+
+*Here is what you will be building and learning with:*
+
+**1. The Clean, Distraction-Free Interface**
+![Homepage Interface](public/images/home.png)
+
+**2. The Step-by-Step Learning Roadmap**
+![The Roadmap](public/images/roadmap.png)
+
+**3. Daily Simplified Research Papers**
+![Daily Paper Breakdown](public/images/paper.png)
+
+---
+
 Artificial Intelligence is no longer just a plot device in science fiction; it is the underlying infrastructure of the next generation of the internet, business, and daily life. Yet, for many, how it actually works remains a "black box" of complex math and confusing jargon.
 
 This 30-day guide is designed to dismantle that black box. Over the next month, you will take a journey from the absolute basics of how machines process language, all the way to the economic and ethical implications of Artificial Superintelligence. You don't need to be a programmer to understand this book. You just need curiosity.
