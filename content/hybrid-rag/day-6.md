@@ -12,6 +12,8 @@ chapterTitle: "Foundations"
 > **Date:** Oct 4, 2026 | **Estimated time:** 3-4 hours
 > **Prerequisites:** [Day 3: RAG Architecture](./day03_rag_architecture.md), [Day 4: Text Embeddings](./day04_text_embeddings.md), [Day 5: Similarity Metrics](./day05_similarity_metrics.md)
 
+<iframe style="width: 100%; aspect-ratio: 16 / 9;" src="https://www.youtube.com/embed/27Xlpovcjsg?si=jz5JMg4YcwuIuHx9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 ## 📌 Cheat Sheet (1-Minute Revision)
 
 | Concept | Remember this | 
