@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 /* ─── SEO Metadata ─── */
-const BASE_URL = "https://aieveryday.vercel.app";
+const BASE_URL = "https://aifromscratch.dev";
 
 export const metadata: Metadata = {
   title:
-    "How to Learn AI from Scratch in 2025 — Complete Beginner Roadmap | AI Academy",
+    "How to Learn AI from Scratch in 2026 — Complete Beginner Roadmap | AI Academy",
   description:
     "The ultimate free roadmap to learn Artificial Intelligence from scratch. Step-by-step guide covering Python, math fundamentals, machine learning, deep learning, NLP, and building real AI projects. No prior experience needed.",
   keywords: [
@@ -233,7 +233,7 @@ const toolsAndSetup = [
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "How to Learn AI from Scratch in 2025 — Complete Beginner Roadmap",
+  headline: "How to Learn AI from Scratch in 2026 — Complete Beginner Roadmap",
   description:
     "The ultimate free roadmap to learn Artificial Intelligence from scratch. Step-by-step guide covering Python, math, ML, deep learning, NLP, and real projects.",
   url: `${BASE_URL}/learn-ai-roadmap`,
@@ -248,7 +248,7 @@ const articleSchema = {
     name: "AI Academy",
     url: BASE_URL,
   },
-  datePublished: "2025-01-15",
+  datePublished: "2026-01-15",
   dateModified: new Date().toISOString().split("T")[0],
   mainEntityOfPage: {
     "@type": "WebPage",
@@ -274,11 +274,31 @@ const howToSchema = {
 
 /* ─── Page Component ─── */
 export default function LearnAIRoadmapPage() {
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://aifromscratch.dev/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Roadmap",
+        "item": "https://aifromscratch.dev/learn-ai-roadmap"
+      }
+    ]
+  };
+
   const combinedSchema = {
     "@context": "https://schema.org",
     "@graph": [
       { ...articleSchema, "@context": undefined },
       { ...howToSchema, "@context": undefined },
+      { ...breadcrumbSchema, "@context": undefined },
     ],
   };
 

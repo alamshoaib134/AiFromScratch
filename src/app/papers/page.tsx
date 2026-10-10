@@ -15,6 +15,9 @@ export const metadata = {
   title: "Paper Everyday | AI Academy",
   description:
     "Daily AI research paper breakdowns — one paper explained clearly, every day. Stay current with the frontier of artificial intelligence research.",
+  alternates: {
+    canonical: "https://aifromscratch.dev/papers",
+  },
 };
 
 function formatDate(dateStr: string): string {
@@ -82,8 +85,32 @@ export default function PapersPage() {
     (a, b) => b[1].length - a[1].length
   );
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://aifromscratch.dev/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Papers",
+        "item": "https://aifromscratch.dev/papers"
+      }
+    ]
+  };
+
   return (
-    <div className="mx-auto max-w-6xl px-6 py-10">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <div className="mx-auto max-w-6xl px-6 py-10">
       {/* Breadcrumb */}
       <div className="animate-fade-in mb-8">
         <Link
@@ -228,5 +255,6 @@ export default function PapersPage() {
         );
       })}
     </div>
+    </>
   );
 }

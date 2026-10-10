@@ -18,7 +18,7 @@ import {
   BookOpen,
 } from "@phosphor-icons/react/dist/ssr";
 
-const BASE_URL = "https://aieveryday.vercel.app";
+const BASE_URL = "https://aifromscratch.dev";
 
 /* ─── Static Generation (SSG) ─── */
 
@@ -187,12 +187,41 @@ export default async function PaperSlugPage({ params }: PaperPageProps) {
     },
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://aifromscratch.dev/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Papers",
+        "item": "https://aifromscratch.dev/papers"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": paper.title,
+        "item": `${BASE_URL}/papers/${slug}`
+      }
+    ]
+  };
+
   return (
     <>
       {/* JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
       <div className="mx-auto max-w-6xl px-6 py-10">

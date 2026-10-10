@@ -8,6 +8,7 @@ import CoursePreviewModal from "@/components/CoursePreviewModal";
 import PasscodeModal from "@/components/PasscodeModal";
 import { ArrowRight } from "@phosphor-icons/react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface HomepageClientProps {
   overviewContent: string;
@@ -147,9 +148,11 @@ export default function HomepageClient({
                 About the Author
               </h2>
               <div className="flex flex-col">
-                <img 
+                <Image 
                   src="https://avatars.githubusercontent.com/u/52914419?v=4" 
                   alt="Shoaib Alam"
+                  width={400}
+                  height={400}
                   className="w-full h-auto grayscale border border-[var(--color-border)] mb-4"
                 />
                 <h3 className="font-[family-name:var(--font-serif)] text-xl font-medium text-[var(--color-ink)] mb-1">

@@ -63,8 +63,57 @@ export default async function DayPage({ params }: DayPageProps) {
   // TODO: Fix hardcoded 30 nextDay check if dynamic length is needed, for now use allDays.length
   const nextDay = dayNum < allDays.length ? dayNum + 1 : null;
 
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: `Day ${day.day}: ${day.title}`,
+    description: day.concept,
+    url: `https://aifromscratch.dev/course/${courseId}/day/${day.day}`,
+    author: {
+      "@type": "Person",
+      name: "Shoaib Alam"
+    },
+    publisher: {
+      "@type": "EducationalOrganization",
+      name: "AI Academy"
+    }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://aifromscratch.dev/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": course.title,
+        "item": `https://aifromscratch.dev/course/${courseId}`
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": `Day ${day.day}`,
+        "item": `https://aifromscratch.dev/course/${courseId}/day/${day.day}`
+      }
+    ]
+  };
+
   return (
     <CourseGuard localStorageKey={course.localStorageKey} courseId={courseId}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <div className="course-layout flex min-h-[calc(100vh-4rem)]">
         {/* Sidebar — fixed, independently scrollable */}
         <aside className="course-sidebar hidden w-72 shrink-0 border-r border-[var(--color-border-light)] bg-white lg:block">

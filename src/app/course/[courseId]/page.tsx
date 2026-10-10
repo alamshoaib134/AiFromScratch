@@ -12,6 +12,25 @@ interface CourseViewerPageProps {
   params: Promise<{ courseId: string }>;
 }
 
+export async function generateMetadata({ params }: CourseViewerPageProps) {
+  const { courseId } = await params;
+  const course = getCourseById(courseId);
+  if (!course) return { title: "Course Not Found" };
+
+  return {
+    title: `${course.title} | AI Academy`,
+    description: course.description,
+    alternates: {
+      canonical: `https://aifromscratch.dev/course/${courseId}`,
+    },
+    openGraph: {
+      title: `${course.title} | AI Academy`,
+      description: course.description,
+      url: `https://aifromscratch.dev/course/${courseId}`,
+    }
+  };
+}
+
 export default async function CourseViewerPage({ params }: CourseViewerPageProps) {
   const { courseId } = await params;
   const course = getCourseById(courseId);
@@ -25,8 +44,31 @@ export default async function CourseViewerPage({ params }: CourseViewerPageProps
 
   let globalIndex = 0;
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://aifromscratch.dev/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": course.title,
+        "item": `https://aifromscratch.dev/course/${courseId}`
+      }
+    ]
+  };
+
   return (
     <CourseGuard localStorageKey={course.localStorageKey} courseId={courseId}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <div className="mx-auto max-w-6xl px-6 py-10">
         {/* Breadcrumb */}
         <div className="animate-fade-in mb-8">

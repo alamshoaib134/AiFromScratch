@@ -9,13 +9,22 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin/', '/api/'],
       },
       {
-        // Explicitly allow AI crawlers
-        userAgent: ['GPTBot', 'ChatGPT-User', 'Google-Extended', 'Anthropic-ai', 'ClaudeBot', 'PerplexityBot', 'Bytespider'],
+        // Explicitly allow AI search crawlers for citation/visibility
+        userAgent: [
+          'GPTBot',
+          'OAI-SearchBot',
+          'ChatGPT-User',
+          'Google-Extended',
+          'ClaudeBot',
+          'Claude-SearchBot',
+          'PerplexityBot',
+          'Applebot-Extended',
+        ],
         allow: '/',
         disallow: ['/admin/', '/api/'],
       },
     ],
-    sitemap: 'https://aieveryday.vercel.app/sitemap.xml',
-    host: 'https://aieveryday.vercel.app',
+    sitemap: 'https://aifromscratch.dev/sitemap.xml',
+    host: 'https://aifromscratch.dev',
   };
 }

@@ -3,6 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import { courses } from "@/lib/courses";
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import HomepageInteractions from "@/components/HomepageInteractions";
 
@@ -22,13 +23,13 @@ export const metadata: Metadata = {
     "AI academy",
   ],
   alternates: {
-    canonical: "https://aieveryday.vercel.app/",
+    canonical: "https://aifromscratch.dev/",
   },
   openGraph: {
     title: "AI Academy — Learn AI for Beginners | Daily Research & Practical Guides",
     description:
       "Free educational platform to learn artificial intelligence from scratch. Explore beginner-friendly AI tutorials, step-by-step guides, and daily simplified research papers.",
-    url: "https://aieveryday.vercel.app/",
+    url: "https://aifromscratch.dev/",
     siteName: "AI Academy",
     type: "website",
     locale: "en_US",
@@ -51,7 +52,7 @@ function getOverviewContent(): string {
 }
 
 /* ─── JSON-LD Structured Data ─── */
-const BASE_URL = "https://aieveryday.vercel.app";
+const BASE_URL = "https://aifromscratch.dev";
 
 const organizationSchema = {
   "@context": "https://schema.org",
@@ -62,10 +63,31 @@ const organizationSchema = {
     "A free, beginner-friendly educational sharing platform dedicated to breaking down artificial intelligence into easy-to-understand concepts, step-by-step guides, and daily research paper breakdowns.",
   founder: {
     "@type": "Person",
+    "@id": `${BASE_URL}/#founder`,
     name: "Shoaib Alam",
     jobTitle: "AI Engineer & NLP Researcher",
     url: "https://shoaibalam.vercel.app/",
+    sameAs: [
+      "https://github.com/shoaibalam134"
+    ]
   },
+};
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": `${BASE_URL}/#founder`,
+  name: "Shoaib Alam",
+  jobTitle: "AI Engineer & NLP Researcher",
+  url: "https://shoaibalam.vercel.app/",
+  worksFor: {
+    "@type": "Organization",
+    name: "JPMC"
+  },
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "IIT Gandhinagar"
+  }
 };
 
 const websiteSchema = {
@@ -112,6 +134,9 @@ function buildCourseSchemas() {
         courseMode: "Online",
         duration: course.duration,
       },
+      inLanguage: "en",
+      coursePrerequisites: "No prior experience required.",
+      datePublished: "2026-01-01"
     }));
 }
 
@@ -143,6 +168,7 @@ export default function HomePage() {
     "@graph": [
       { ...organizationSchema, "@context": undefined },
       { ...websiteSchema, "@context": undefined },
+      { ...personSchema, "@context": undefined },
       ...courseSchemas.map((s) => ({ ...s, "@context": undefined })),
       { ...learningResourceSchema, "@context": undefined },
     ],
@@ -303,9 +329,11 @@ export default function HomePage() {
                 About the Author
               </h2>
               <div className="flex flex-col">
-                <img
+                <Image
                   src="https://avatars.githubusercontent.com/u/52914419?v=4"
                   alt="Shoaib Alam — AI Engineer and creator of AI Academy"
+                  width={400}
+                  height={400}
                   className="w-full h-auto grayscale border border-[var(--color-border)] mb-4"
                 />
                 <h3 className="font-[family-name:var(--font-serif)] text-xl font-medium text-[var(--color-ink)] mb-1">
