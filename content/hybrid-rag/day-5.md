@@ -14,6 +14,8 @@ chapterTitle: "Foundations"
 >
 > **Prerequisite:** [Day 4: Text Embeddings](./day04_text_embeddings.md)
 
+<iframe style="width: 100%; aspect-ratio: 16 / 9;" src="https://www.youtube.com/embed/-ojYeP9lKn0?si=RduDWSXJC_xl7dn8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 ---
 
 ## 📌 Cheat Sheet (1-Minute Revision)
