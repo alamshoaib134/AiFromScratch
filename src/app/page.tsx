@@ -23,13 +23,13 @@ export const metadata: Metadata = {
     "AI academy",
   ],
   alternates: {
-    canonical: "https://aifromscratch.in/",
+    canonical: "https://www.aifromscratch.in/",
   },
   openGraph: {
     title: "Learn AI from Scratch | Free Beginner Guides & Research",
     description:
       "Learn artificial intelligence from scratch for free. Explore beginner-friendly AI tutorials, step-by-step guides, and daily simplified research paper breakdowns.",
-    url: "https://aifromscratch.in/",
+    url: "https://www.aifromscratch.in/",
     siteName: "AI From Scratch",
     type: "website",
     locale: "en_US",
@@ -52,7 +52,7 @@ function getOverviewContent(): string {
 }
 
 /* ─── JSON-LD Structured Data ─── */
-const BASE_URL = "https://aifromscratch.in";
+const BASE_URL = "https://www.aifromscratch.in";
 
 const organizationSchema = {
   "@context": "https://schema.org",

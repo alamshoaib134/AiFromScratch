@@ -16,7 +16,7 @@ export const metadata = {
   description:
     "Daily AI research paper breakdowns — one paper explained clearly, every day. Stay current with the frontier of artificial intelligence research.",
   alternates: {
-    canonical: "https://aifromscratch.in/papers",
+    canonical: "https://www.aifromscratch.in/papers",
   },
 };
 
@@ -93,13 +93,13 @@ export default function PapersPage() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://aifromscratch.in/"
+        "item": "https://www.aifromscratch.in/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Papers",
-        "item": "https://aifromscratch.in/papers"
+        "item": "https://www.aifromscratch.in/papers"
       }
     ]
   };

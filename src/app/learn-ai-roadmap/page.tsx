@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-/* ─── SEO Metadata ─── */
-const BASE_URL = "https://aifromscratch.in";
+const BASE_URL = "https://www.aifromscratch.in";
 
 export const metadata: Metadata = {
   title:
@@ -282,13 +281,13 @@ export default function LearnAIRoadmapPage() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://aifromscratch.in/"
+        "item": "https://www.aifromscratch.in/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Roadmap",
-        "item": "https://aifromscratch.in/learn-ai-roadmap"
+        "item": "https://www.aifromscratch.in/learn-ai-roadmap"
       }
     ]
   };

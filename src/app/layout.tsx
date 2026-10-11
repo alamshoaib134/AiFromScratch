@@ -18,7 +18,7 @@ const ibmPlexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://aifromscratch.in"),
+  metadataBase: new URL("https://www.aifromscratch.in"),
   title: {
     default:
       "Learn AI from Scratch | Free Beginner Guides & Research",
@@ -40,20 +40,20 @@ export const metadata: Metadata = {
   creator: "Shoaib Alam",
   publisher: "AI From Scratch",
   alternates: {
-    canonical: "https://aifromscratch.in/",
+    canonical: "https://www.aifromscratch.in/",
   },
   openGraph: {
     title:
       "Learn AI from Scratch | Free Beginner Guides & Research",
     description:
       "Learn artificial intelligence from scratch for free. Explore beginner-friendly AI tutorials, step-by-step guides, and daily simplified research paper breakdowns.",
-    url: "https://aifromscratch.in/",
+    url: "https://www.aifromscratch.in/",
     siteName: "AI From Scratch",
     type: "website",
     locale: "en_US",
     images: [
       {
-        url: "https://aifromscratch.in/images/og-default.png",
+        url: "https://www.aifromscratch.in/images/og-default.png",
         width: 1200,
         height: 630,
         alt: "AI From Scratch — Learn AI for Beginners",
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     title: "Learn AI from Scratch | Free Beginner Guides & Research",
     description:
       "Learn artificial intelligence from scratch for free. Explore beginner-friendly AI tutorials, step-by-step guides, and daily simplified research paper breakdowns.",
-    images: ["https://aifromscratch.in/images/og-default.png"],
+    images: ["https://www.aifromscratch.in/images/og-default.png"],
   },
   robots: {
     index: true,

@@ -68,7 +68,7 @@ export default async function DayPage({ params }: DayPageProps) {
     "@type": "Article",
     headline: `Day ${day.day}: ${day.title}`,
     description: day.concept,
-    url: `https://aifromscratch.in/course/${courseId}/day/${day.day}`,
+    url: `https://www.aifromscratch.in/course/${courseId}/day/${day.day}`,
     author: {
       "@type": "Person",
       name: "Shoaib Alam"
@@ -87,19 +87,19 @@ export default async function DayPage({ params }: DayPageProps) {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://aifromscratch.in/"
+        "item": "https://www.aifromscratch.in/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": course.title,
-        "item": `https://aifromscratch.in/course/${courseId}`
+        "item": `https://www.aifromscratch.in/course/${courseId}`
       },
       {
         "@type": "ListItem",
         "position": 3,
         "name": `Day ${day.day}`,
-        "item": `https://aifromscratch.in/course/${courseId}/day/${day.day}`
+        "item": `https://www.aifromscratch.in/course/${courseId}/day/${day.day}`
       }
     ]
   };
